@@ -33,7 +33,7 @@ To facilitate easy deployment and shipping, CloseStead will be dockerized. Docke
 To get started with CloseStead, follow these steps:
 
 1. Clone the repository.
-2. Install the necessary dependencies using npm or yarn.
+2. Install the necessary dependencies using yarn.
 3. Set up the MySQL database and configure the connection details.
 4. Run the application locally for testing and development.
 
