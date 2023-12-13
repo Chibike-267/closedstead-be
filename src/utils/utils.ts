@@ -8,8 +8,8 @@ dotenv.config();
 //kindly use the functions to do yout basic verification and authentication
 
 // generate token
-export const generateToken = async (signature: Record<string, string>) => {
-  return Jwt.sign(signature, process.env.JWT_SECRET as string, {
+export const generateToken = async (email: string, id: string) => {
+  return Jwt.sign({ email, id }, process.env.JWT_SECRET as string, {
     expiresIn: "3d",
   });
 };
