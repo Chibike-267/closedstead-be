@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -7,8 +9,6 @@ import logger from "morgan";
 import passport from "passport";
 import { configureGoogleStrategy } from "./components/OAuth";
 import router from "./routes";
-import dotenv from "dotenv";
-dotenv.config();
 
 const app = express();
 
@@ -21,9 +21,11 @@ app.use(helmet());
 // enable cors
 app.use(cors());
 
+const sessionSecret = process.env.SECRET || "defaultSecret";
+
 app.use(
   session({
-    secret: "eatbeforeyougetstarted",
+    secret: [sessionSecret],
     resave: false,
     saveUninitialized: true,
   })
