@@ -33,11 +33,16 @@ UsersModel.init(
     },
     firstName: {
       type: DataTypes.STRING,
-      allowNull: false,
+      defaultValue: "",
+      allowNull: true,
     },
     surname: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
+    },
+    fullname: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     email: {
       type: DataTypes.STRING,
@@ -46,7 +51,7 @@ UsersModel.init(
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     googleId: {
       type: DataTypes.STRING,

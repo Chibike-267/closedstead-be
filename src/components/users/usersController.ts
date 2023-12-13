@@ -32,6 +32,15 @@ export const registerUser = async (req: Request, res: Response) => {
       message: "user created successfully",
     });
   } catch (error) {
+    console.error("Error during user registration:", error);
     return res.status(500).json({ message: "something went wrong" });
   }
+};
+
+export const logout = async (req: Request, res: Response) => {
+  req.session.destroy(() => {
+    return res
+      .status(200)
+      .json({ message: "Logout successful. Come back soon!" });
+  });
 };
