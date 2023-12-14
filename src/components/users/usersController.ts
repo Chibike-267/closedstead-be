@@ -3,6 +3,8 @@ import { Request, Response } from "express";
 import { UsersModel } from "./model";
 import { v4 as uuidv4 } from "uuid";
 
+
+// -------------------------------------------REGISTER USERS----------------------------------------
 export const registerUser = async (req: Request, res: Response) => {
   try {
     const { email, firstName, surname, password, phone } = req.body;
@@ -33,5 +35,23 @@ export const registerUser = async (req: Request, res: Response) => {
     });
   } catch (error) {
     return res.status(500).json({ message: "something went wrong" });
+  }
+};
+
+
+
+// -------------------------------------------GET ALL USERS----------------------------------------
+export const getUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await UsersModel.findAll({
+      // where: { role: ROLE.EMPLOYEE },
+    });
+
+    return res
+      .status(200)
+      .json({ users, message: "You have successfully retrieved all users" });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return res.status(500).json({ error, message: "error fetching users" });
   }
 };
