@@ -1,24 +1,30 @@
 import { NextFunction, Request, Response } from "express";
-import { User, UserModel } from "../../component/User/model";
-import { Google } from "../../components/OAuth";
+import { UsersModel } from "../../components/users/model";
+
 export class AuthMiddleware {
-  static Authenticate =
-    (role: string[]) =>
-    async (req: Request, res: Response, next: NextFunction) => {
+  static Authenticate = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
       if (req.user) {
-        const { id, email } = req.user as Google;
-        const user = (await UserModel.findOne({
+        const { id, email } = req.user as any;
+        const user = await UsersModel.findOne({
           where: { googleId: id, email },
-        })) as unknown as User;
+        });
+
         if (user) {
-          if (role.includes(user.role)) {
-            next();
-          } else {
-            res.status(401).send("Unauthorized");
-          }
-        } else res.status(401).send("Unauthorized");
+          next();
+        } else {
+          res.status(401).send("Unauthorized");
+        }
       } else {
-        //register
+        res.status(401).send("Unauthorized, user not authenticated");
       }
-    };
+    } catch (error) {
+      console.error("Authentication error:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  };
 }

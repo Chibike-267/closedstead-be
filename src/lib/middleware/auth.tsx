@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Jwt, { JwtPayload } from "jsonwebtoken";
-import { User, UserModel } from "../../components/users/model";
+import { UsersModel } from "../../components/users/model";
  
 export class AuthMiddleware {
   static Authenticate =
@@ -20,16 +20,16 @@ export class AuthMiddleware {
           return res.status(401).json({ error: "unauthorized" });
         }
         const { id } = verified as JwtPayload;
-        const user = (await UserModel.findOne({
+        const user = (await UsersModel.findOne({
           where: { id },
-        })) as unknown as User;
- 
-        if (!auth.includes(user.role)) {
-          return res.status(401).json({ error: "Unauthorized" });
+        })) 
+        if (!user) {
+          return res.status(401).json({ error: "unauthorized" });
         }
-        req.user = user.id;
+        req.user = user;
         next();
       } catch (error) {
+        console.error("Authentication error:", error);
         return res.status(500).json({ error });
       }
     };
