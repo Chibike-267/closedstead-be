@@ -6,7 +6,7 @@ import app from "../app";
 import db from "../db";
 // import "../src/components/OAuth/index";
 
-const port = process.env.PORT ?? 3000;
+const port = process.env.PORT ?? 3005;
 
 const server = createServer(app);
 

@@ -46,6 +46,7 @@ export const registerUser = async (req: Request, res: Response) => {
   }
 };
 
+
 export const logout = async (req: Request, res: Response) => {
   req.session.destroy(() => {
     return res
