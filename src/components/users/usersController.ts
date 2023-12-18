@@ -1,3 +1,4 @@
+
 import {
   registerUserSchema,
   option,
@@ -5,14 +6,28 @@ import {
   loginUserSchema,
   bcryptDecode,
   generateToken,
+  resendResetPasswordOtpSchema,
+  resetPasswordSchema,
+  bcryptEncoded,
+  forgotPasswordSchema,
 } from "../../utils/utils";
 import { Request, Response } from "express";
 import { UsersModel } from "./model";
 import { v4 as uuidv4 } from "uuid";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import generateVerifcationOTP from "../../lib/helper/generateVerifcationOTP";
+import sendResetOTP from "../../lib/helper/sendResetOTP";
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
-    const { email, firstName, surname, password, phone } = req.body;
+    const { 
+      email, 
+      firstName, 
+      surname, 
+      password, 
+      phone 
+    } = req.body;
 
     const validate = registerUserSchema.validate(req.body, option);
 
@@ -85,5 +100,130 @@ export const login = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error during login:", error);
     return res.status(500).json({ message: "something went wrong" });
+  }
+};
+
+export const forgotPassword = async (req: Request, res: Response) => {
+  try {
+    const validate = forgotPasswordSchema.validate(req.body, option);
+    if (validate.error) {
+      return res
+        .status(400)
+        .json({ error: validate.error.details[0].message });
+    }
+    const email = req.body;
+
+    const user = await UsersModel.findOne({ where: email });
+
+    if (!user) return res.status(400).json({ error: "Invalid credentials" });
+
+    const OTP = generateVerifcationOTP();
+
+    const receiver = user.dataValues.email;
+    sendResetOTP(receiver, OTP);
+
+    const userReset = await UsersModel.update(
+      {
+        resetPasswordCode: OTP,
+        resetPasswordStatus: true,
+        resetPasswordExpiration: Date.now() + 600000,
+      },
+      { where: email }
+    );
+
+    return res.status(200).json({ message: "Password Reset Successful. Check your email to reset your password" });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+// ============================ RESET PASSWORD SECTION ===================== //
+// ============================ ==================== ===================== //
+
+export const resetPassword = async (req: Request, res: Response) => {
+  try {
+    const { email, code, password, confirm_password } = req.body;
+    const validationResult = resetPasswordSchema.validate(req.body, option);
+    if (validationResult.error) {
+      return res
+        .status(400)
+        .json({ error: validationResult.error.details[0].message });
+    }
+    const user = (await UsersModel.findOne({
+      where: { email },
+    }));
+    if (!user) return res.status(400).json({ error: "Invalid credentials" });
+    if (user.resetPasswordCode !== code) {
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+    if (
+      user.resetPasswordExpiration &&
+      (user.resetPasswordExpiration as number) < new Date().getTime()
+    ) {
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+    const hash = await bcryptEncoded({ value: password });
+
+    const userEmail = await UsersModel.update(
+      {
+        password: hash,
+        resetPasswordStatus: false,
+        resetPasswordCode: null,
+        resetPasswordExpiration: null,
+      },
+      { where: { id: user.id } }
+    );
+    if (!userEmail) {
+      let info: { [key: string]: string } = {
+        error: "Invalid credentials",
+      };
+      throw new Error(info.error);
+    }
+
+    return res.status(200).json({ message: "SUCCESS" });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+// ============================ RESEND RESET PASSWORD OTP SECTION ===================== //
+// ============================ ==================== ===================== //
+
+export const resendResetPasswordOtp = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+
+    const validation = resendResetPasswordOtpSchema.validate(req.body, option);
+    if (validation.error) {
+      return res
+        .status(400)
+        .json({ error: validation.error.details[0].message });
+    }
+
+    const user = (await UsersModel.findOne({
+      where: { email: email },
+    }));
+
+    if (!user) {
+      return res.status(404).json({ error: "Invalid credentials" });
+    }
+
+    const OTP = generateVerifcationOTP();
+    sendResetOTP(email, OTP);
+
+    await UsersModel.update(
+      {
+        resetPasswordCode: OTP,
+        resetPasswordStatus: true,
+        resetPasswordExpiration: Date.now() + 5 * 60 * 1000,
+      },
+      { where: { email: email } }
+    );
+
+    return res.status(200).json({ message: "SUCCESS" });
+  } catch (error) {
+    return res.status(500).json({
+      error,
+    });
   }
 };
