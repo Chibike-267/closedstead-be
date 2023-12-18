@@ -16,6 +16,7 @@ import { v4 as uuidv4 } from "uuid";
 import generateVerifcationOTP from "../../library/helpers/generateVerifcationOTP";
 import sendResetOTP from "../../library/helpers/requestResetOTP";
 
+// -------------------------------------------REGISTER USERS----------------------------------------
 export const registerUser = async (req: Request, res: Response) => {
   try {
     const { email, firstName, surname, password, phone } = req.body;
@@ -220,5 +221,18 @@ export const sendResetPasswordOtp = async (req: Request, res: Response) => {
     return res.status(500).json({
       error,
     });
+  }
+};
+
+// -------------------------------------------GET ALL USERS----------------------------------------
+export const getUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await UsersModel.findAll({});
+    return res
+      .status(200)
+      .json({ users, message: "You have successfully retrieved all users" });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return res.status(500).json({ error, message: "error fetching users" });
   }
 };
