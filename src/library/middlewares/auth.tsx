@@ -4,7 +4,7 @@ import { UsersModel } from "../../components/users/model";
  
 export class AuthMiddleware {
   static Authenticate =
-    (auth: string[]) =>
+    (auth: string) =>
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const token = req.headers["authorization"] as string;

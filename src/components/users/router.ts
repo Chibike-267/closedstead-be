@@ -1,5 +1,4 @@
 import express, { Request, Response } from "express";
-<<<<<<< HEAD
 import {
   forgotPassword,
   login,
@@ -7,10 +6,10 @@ import {
   registerUser,
   sendResetPasswordOtp,
   resetPassword,
+  getUsers
 } from "./usersController";
-=======
-import { login, logout, registerUser, getUsers } from "./usersController";
->>>>>>> 6b5748a566ded02b3005fe5234551301de824ead
+import { AuthMiddleware } from "../../library/middlewares/auth";
+
 
 const router = express.Router();
 
@@ -21,12 +20,9 @@ router.get("/home", (req: Request, res: Response) => {
 router.post("/register", registerUser);
 router.post("/login", login);
 router.post("/logout", logout);
-<<<<<<< HEAD
 router.post("/sendResetPasswordOtp", sendResetPasswordOtp);
 router.post("/forgotPassword", forgotPassword);
 router.post("/resetPassword", resetPassword);
-=======
-router.get("/getAllUsers", getUsers);
->>>>>>> 6b5748a566ded02b3005fe5234551301de824ead
+router.get("/getAllUsers", AuthMiddleware.Authenticate("user"), getUsers);
 
 export default router;
