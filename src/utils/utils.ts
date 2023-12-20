@@ -94,3 +94,13 @@ export const loginUserSchema = Joi.object().keys({
     .regex(/^[a-zA-Z0-9]{3,18}$/)
     .required(),
 });
+
+export const changePasswordSchema = Joi.object().keys({
+  currentPassword: Joi.string().required(),
+  newPassword: Joi.string().required(),
+  confirmPassword: Joi.any()
+    .equal(Joi.ref("newPassword"))
+    .required()
+    .label("Confirm password")
+    .messages({ "any.only": "{{#label}} does not match" }),
+});
