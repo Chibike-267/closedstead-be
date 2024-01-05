@@ -46,7 +46,10 @@ passport.serializeUser((user, done) => {
 // Google Authentication routes
 app.get(
   "/auth/google",
-  passport.authenticate("google", { scope: ["email", "profile"] })
+  passport.authenticate("google", {
+    scope: ["email", "profile"],
+    prompt: "consent", // Set the prompt parameter to "consent"
+  })
 );
 
 app.get(
