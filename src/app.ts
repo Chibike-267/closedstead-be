@@ -58,7 +58,7 @@ app.get(
     failureRedirect: "/auth/failure",
   }),
   (req: Request, res: Response) => {
-    res.status(200).json({ message: "succesfully logged in" });
+    res.status(200).json({ message: "successfully logged in" });
   }
 );
 

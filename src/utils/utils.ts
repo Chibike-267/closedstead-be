@@ -24,14 +24,23 @@ export const verify = async (token: string) => {
   }
 };
 
-//hashing
-export const hashPassword = (password: string): Promise<string> => {
-  return bcryptjs.hash(password, bcryptjs.genSaltSync());
+//Encoding
+export const bcryptEncoded = async (value: { value: string }) => {
+  return bcryptjs.hash(value.value, await genSalt());
 };
 
 //decoding
 export const bcryptDecode = (password: string, comparePassword: string) => {
   return bcryptjs.compare(password, comparePassword);
+};
+
+export const generatePasswordResetToken = (): number => {
+  return Math.floor(Math.random() * (9999 - 1000 + 1) + 1000);
+};
+
+//hashing
+export const hashPassword = (password: string): Promise<string> => {
+  return bcryptjs.hash(password, bcryptjs.genSaltSync());
 };
 
 export const option = {
@@ -57,6 +66,25 @@ export const registerUserSchema = Joi.object().keys({
     .label("Confirm password")
     .messages({ "any.only": "{{#label}} does not match" }),
   phone: Joi.string().required(),
+});
+
+export const resetPasswordSchema = Joi.object().keys({
+  email: Joi.string().trim().lowercase().email().required(),
+  code: Joi.number().required(),
+  password: Joi.string().required(),
+  confirm_password: Joi.any()
+    .equal(Joi.ref("password"))
+    .required()
+    .label("Confirm password")
+    .messages({ "any.only": "{{#label}} does not match" }),
+});
+
+export const forgotPasswordSchema = Joi.object().keys({
+  email: Joi.string().trim().lowercase().required(),
+});
+
+export const resendResetPasswordOtpSchema = Joi.object().keys({
+  email: Joi.string().trim().lowercase().required(),
 });
 
 export const loginUserSchema = Joi.object().keys({
