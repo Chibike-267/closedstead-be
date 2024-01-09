@@ -96,3 +96,16 @@ export const loginUserSchema = Joi.object().keys({
 });
 
 //=============================== Units Schema ===============================/
+
+export const createUnitsSchema = Joi.object().keys({
+  name: Joi.string().required(),
+  number: Joi.number().required(),
+  status: Joi.string().required(),
+  numberOfBedrooms: Joi.number().required(),
+  price: Joi.number().required(),
+  pictures: Joi.string(),
+  type: Joi.string(),
+  userId: Joi.string().required(),
+  location: Joi.string().required(),
+  description: Joi.string().required(),
+});
