@@ -6,7 +6,10 @@ import {
   registerUser,
   sendResetPasswordOtp,
   resetPassword,
+  getUsers
 } from "./usersController";
+import { AuthMiddleware } from "../../library/middlewares/auth";
+
 
 const router = express.Router();
 
@@ -20,5 +23,6 @@ router.post("/logout", logout);
 router.post("/sendResetPasswordOtp", sendResetPasswordOtp);
 router.post("/forgotPassword", forgotPassword);
 router.post("/resetPassword", resetPassword);
+router.get("/getAllUsers", AuthMiddleware.Authenticate("user"), getUsers);
 
 export default router;

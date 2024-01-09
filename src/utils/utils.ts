@@ -78,6 +78,7 @@ export const resetPasswordSchema = Joi.object().keys({
     .label("Confirm password")
     .messages({ "any.only": "{{#label}} does not match" }),
 });
+
 export const forgotPasswordSchema = Joi.object().keys({
   email: Joi.string().trim().lowercase().required(),
 });
