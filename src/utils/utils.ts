@@ -105,7 +105,18 @@ export const createUnitsSchema = Joi.object().keys({
   price: Joi.number().required(),
   pictures: Joi.string(),
   type: Joi.string(),
-  userId: Joi.string().required(),
   location: Joi.string().required(),
   description: Joi.string().required(),
+});
+
+export const updateUnitsSchema = Joi.object().keys({
+  name: Joi.string(),
+  number: Joi.number(),
+  status: Joi.string(),
+  numberOfBedrooms: Joi.number(),
+  price: Joi.number(),
+  pictures: Joi.string(),
+  type: Joi.string(),
+  location: Joi.string(),
+  description: Joi.string(),
 });
