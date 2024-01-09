@@ -93,3 +93,5 @@ export const loginUserSchema = Joi.object().keys({
     .regex(/^[a-zA-Z0-9]{3,18}$/)
     .required(),
 });
+
+//=============================== Units Schema ===============================/
