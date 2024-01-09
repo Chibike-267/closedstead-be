@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import Jwt, { JwtPayload } from "jsonwebtoken";
 import { UsersModel } from "../../components/users/model";
+
+//================== I changed from this class based middleware, because I dont see the need in this project, 
+//since it could be simpler ==================//
  
 // export class AuthMiddleware {
 //   static Authenticate =
