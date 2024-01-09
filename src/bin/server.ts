@@ -12,10 +12,10 @@ const server = createServer(app);
 
 //please for whatever reason don't just think of {force:true}
 
-db.sync()
+db.sync({alter: true})
   .then(() => console.log("database connected successfully"))
   .catch((err) => {
-    console.error("Unable to connect to the database:", err);
+    console.error("Unable to connect to you to your database:", err);
   });
 app.listen(port, () => {
   console.log(`server is live on http://localhost:${port}`);
