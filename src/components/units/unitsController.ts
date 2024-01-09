@@ -124,3 +124,50 @@ export const unitsBeloningToUser = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "something went wrong" });
   }
 };
+
+export const getSingleUnit = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const unit = await UnitsModel.findOne({ where: { id } });
+
+    if (!unit) {
+      return res.status(404).json({ message: "unit not found" });
+    }
+
+    return res.status(200).json({ unit });
+  } catch (error) {
+    console.error("Error during unit update:", error);
+    return res.status(500).json({ message: "something went wrong" });
+  }
+};
+
+export const getAllAvailableUnits = async (req: Request, res: Response) => {
+  try {
+    const availableUnits = await UnitsModel.findAll({
+      where: {
+        status: "available",
+      },
+    });
+
+    return res.status(200).json({ units: availableUnits });
+  } catch (error) {
+    console.error("Error retrieving available units:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getAllUnavailableUnits = async (req: Request, res: Response) => {
+  try {
+    const unavailableUnits = await UnitsModel.findAll({
+      where: {
+        status: "occupied",
+      },
+    });
+
+    return res.status(200).json({ units: unavailableUnits });
+  } catch (error) {
+    console.error("Error retrieving unavailable units:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
