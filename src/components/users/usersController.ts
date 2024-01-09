@@ -87,6 +87,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const token = await generateToken(email, exists.dataValues.id);
+    res.cookie("token", token, { httpOnly: true });
 
     return res.status(200).json({ token, message: "login successful" });
   } catch (error) {

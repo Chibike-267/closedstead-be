@@ -6,6 +6,7 @@ import {
   option,
   updateUnitsSchema,
 } from "../../utils/utils";
+import Jwt, { JwtPayload } from "jsonwebtoken";
 
 export const createUnits = async (req: Request, res: Response) => {
   try {
@@ -29,7 +30,11 @@ export const createUnits = async (req: Request, res: Response) => {
 
     const id = uuidv4();
 
-    const userId = req.user.id;
+    const token = req.cookies.token;
+    const verified = Jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    const userId = verified.id;
+
+    console.log("this is the userId: ", userId);
 
     const newUnit = await UnitsModel.create({
       ...validate.value,
@@ -74,17 +79,25 @@ export const updateUnits = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "unit not found" });
     }
 
-    const userId = req.user.id;
+    const token = req.cookies.token;
+    const verified = Jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    const userId = verified.id;
 
-    await UnitsModel.update(
+    console.log(userId);
+
+    const [affectedRows, updatedUnits] = await UnitsModel.update(
       {
         ...validate.value,
         userId,
       },
-      { where: { id } }
+      { where: { id }, returning: true }
     );
 
-    return res.status(200).json({ message: "unit updated successfully" });
+    console.log(updatedUnits);
+
+    return res
+      .status(200)
+      .json({ updatedUnits, message: "unit updated successfully" });
   } catch (error) {
     console.error("Error during unit update:", error);
     return res.status(500).json({ message: "something went wrong" });
@@ -93,7 +106,11 @@ export const updateUnits = async (req: Request, res: Response) => {
 
 export const unitsBeloningToUser = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    // const { userId } = req.params; --- if the frontend person chooses to optionally use this approach
+
+    const token = req.cookies.token;
+    const verified = Jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    const userId = verified.id;
 
     const units = await UnitsModel.findAll({ where: { userId } });
 
