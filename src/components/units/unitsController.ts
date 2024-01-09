@@ -73,17 +73,17 @@ export const updateUnits = async (req: Request, res: Response) => {
       return res.status(400).json({ Error: validate.error.details[0].message });
     }
 
-    const unit = await UnitsModel.findOne({ where: { id } });
-
-    if (!unit) {
-      return res.status(404).json({ message: "unit not found" });
-    }
-
     const token = req.cookies.token;
     const verified = Jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
     const userId = verified.id;
 
     console.log(userId);
+
+    const unit = await UnitsModel.findOne({ where: { id, userId } });
+
+    if (!unit) {
+      return res.status(404).json({ message: "unit not found" });
+    }
 
     const [affectedRows, updatedUnits] = await UnitsModel.update(
       {
@@ -129,7 +129,11 @@ export const getSingleUnit = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const unit = await UnitsModel.findOne({ where: { id } });
+    const token = req.cookies.token;
+    const verified = Jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    const userId = verified.id;
+
+    const unit = await UnitsModel.findOne({ where: { id, userId } });
 
     if (!unit) {
       return res.status(404).json({ message: "unit not found" });
@@ -144,9 +148,14 @@ export const getSingleUnit = async (req: Request, res: Response) => {
 
 export const getAllAvailableUnits = async (req: Request, res: Response) => {
   try {
+    const token = req.cookies.token;
+    const verified = Jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    const userId = verified.id;
+
     const availableUnits = await UnitsModel.findAll({
       where: {
         status: "available",
+        userId: userId,
       },
     });
 
@@ -159,9 +168,14 @@ export const getAllAvailableUnits = async (req: Request, res: Response) => {
 
 export const getAllUnavailableUnits = async (req: Request, res: Response) => {
   try {
+    const token = req.cookies.token;
+    const verified = Jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    const userId = verified.id;
+
     const unavailableUnits = await UnitsModel.findAll({
       where: {
         status: "occupied",
+        userId: userId,
       },
     });
 
