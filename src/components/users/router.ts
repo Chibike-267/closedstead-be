@@ -6,11 +6,8 @@ import {
   registerUser,
   sendResetPasswordOtp,
   resetPassword,
-<<<<<<< HEAD
-  getUsers
-=======
+  getUsers,
   changePassword,
->>>>>>> 8fdaee9f394f22b04d04a95f228baf3212c3e021
 } from "./usersController";
 import { AuthMiddleware } from "../../library/middlewares/auth";
 
@@ -27,10 +24,7 @@ router.post("/logout", logout);
 router.post("/sendResetPasswordOtp", sendResetPasswordOtp);
 router.post("/forgotPassword", forgotPassword);
 router.post("/resetPassword", resetPassword);
-<<<<<<< HEAD
 router.get("/getAllUsers", AuthMiddleware.Authenticate("user"), getUsers);
-=======
 router.post("/changePassword", changePassword);
->>>>>>> 8fdaee9f394f22b04d04a95f228baf3212c3e021
 
 export default router;

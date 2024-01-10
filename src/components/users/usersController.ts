@@ -226,7 +226,6 @@ export const sendResetPasswordOtp = async (req: Request, res: Response) => {
   }
 };
 
-<<<<<<< HEAD
 // -------------------------------------------GET ALL USERS----------------------------------------
 export const getUsers = async (req: Request, res: Response) => {
   try {
@@ -239,7 +238,6 @@ export const getUsers = async (req: Request, res: Response) => {
     return res.status(500).json({ error, message: "error fetching users" });
   }
 };
-=======
 // ============================ CHANGE PASSWORD SECTION ===================== //
 // ============================ ==================== ===================== //
 
@@ -280,4 +278,3 @@ export const changePassword = async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
->>>>>>> 8fdaee9f394f22b04d04a95f228baf3212c3e021
