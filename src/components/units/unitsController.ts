@@ -1,4 +1,4 @@
-import { UnitsModel } from "./model";
+import { UnitsModel, db } from "./model";
 import { v4 as uuidv4 } from "uuid";
 import { Request, Response } from "express";
 import {
@@ -7,6 +7,7 @@ import {
   updateUnitsSchema,
 } from "../../utils/utils";
 import Jwt, { JwtPayload } from "jsonwebtoken";
+import { Op } from "sequelize";
 
 export const createUnits = async (req: Request, res: Response) => {
   try {
@@ -101,6 +102,83 @@ export const updateUnits = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error during unit update:", error);
     return res.status(500).json({ message: "something went wrong" });
+  }
+};
+
+// export const filterUnits = async (req: Request, res: Response) => {
+//     try {
+
+//     } catch (error) {
+
+//     }
+// }
+
+export const filterUnits = async (req: Request, res: Response) => {
+  try {
+    const { location, status } = req.query;
+
+    if (!location && !status) {
+      return res.status(400).json({
+        error:
+          "Please provide either location or status in the query parameters",
+      });
+    }
+
+    let orderField: string = "createdAt";
+    if (location && status) {
+      return res.status(400).json({
+        error: "Please provide either location or status, not both",
+      });
+    } else if (location) {
+      orderField = "location";
+    } else if (status) {
+      orderField = "status";
+    }
+
+    const units = await UnitsModel.findAll({
+      where: {
+        ...(location ? { location } : {}),
+        ...(status ? { status } : {}),
+      },
+      order: [[orderField, "DESC"]],
+    });
+
+    if (units.length === 0) {
+      return res.status(404).json({ message: "No matches found" });
+    }
+
+    return res.status(200).json({ message: "Units found successfully", units });
+  } catch (error) {
+    console.error("Error during filtering units:", error);
+    return res.status(500).json({ error });
+  }
+};
+
+export const searchUnits = async (req: Request, res: Response) => {
+  try {
+    const { search } = req.query;
+
+    if (!search) {
+      return res.status(400).json({
+        error: "Please provide a search text in the query parameters",
+      });
+    }
+
+    const units = await UnitsModel.findAll({
+      where: {
+        name: { [Op.like]: `%${search}%` },
+      },
+      order: [["createdAt", "DESC"]],
+    });
+
+    if (units.length === 0) {
+      return res.status(404).json({ message: "No matches found" });
+    }
+
+    return res.status(200).json({ message: "Units found successfully", units });
+  } catch (error) {
+    console.error("Error during filtering units:", error);
+    return res.status(500).json({ error });
   }
 };
 
