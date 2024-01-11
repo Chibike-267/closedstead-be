@@ -75,15 +75,14 @@ export const login = async (req: Request, res: Response) => {
     if (!exists) {
       return res.status(400).json({ message: "invalid credentials" });
     }
-    const validPassword = await bcryptDecode(
-      password,
-      exists.password
-    );
+    const validPassword = await bcryptDecode(password, exists.password);
     if (!validPassword) {
       return res.status(400).json({ message: "invalid credentials" });
     }
 
     const token = await generateToken(email, exists.dataValues.id);
+
+    console.log("this is the token: ", token);
 
     return res.status(200).json({ token, message: "login successful" });
   } catch (error) {
@@ -143,7 +142,7 @@ export const resetPassword = async (req: Request, res: Response) => {
       where: { email },
     });
     if (!user) return res.status(400).json({ error: "Invalid credentials" });
-    console.log(user)
+    console.log(user);
     if (user.resetPasswordCode !== code) {
       return res.status(400).json({ error: "Invalid OTP" });
     }
@@ -151,7 +150,9 @@ export const resetPassword = async (req: Request, res: Response) => {
       user.resetPasswordExpiration &&
       (user.resetPasswordExpiration as number) < new Date().getTime()
     ) {
-      return res.status(400).json({ error: "OTP expired. Please generate a new OTP" });
+      return res
+        .status(400)
+        .json({ error: "OTP expired. Please generate a new OTP" });
     }
     const hash = await bcryptEncoded({ value: password });
 

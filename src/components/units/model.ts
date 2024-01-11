@@ -9,9 +9,9 @@ class UnitsModel extends Model {
   public status!: "available" | "occupied";
   public numberOfBedrooms!: number;
   public price!: number;
-  public pictures?: (string | undefined)[];
+  public pictures?: string[];
   public type?: string;
-  public userId!: string;
+  public userId?: string;
   public location!: string;
   public description!: string;
   public createdAt!: Date;
@@ -44,8 +44,9 @@ UnitsModel.init(
       type: DataTypes.INTEGER,
     },
     pictures: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSON,
     },
+
     type: {
       type: DataTypes.STRING,
     },
