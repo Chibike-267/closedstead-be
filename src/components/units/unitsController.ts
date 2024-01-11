@@ -105,14 +105,6 @@ export const updateUnits = async (req: Request, res: Response) => {
   }
 };
 
-// export const filterUnits = async (req: Request, res: Response) => {
-//     try {
-
-//     } catch (error) {
-
-//     }
-// }
-
 export const filterUnits = async (req: Request, res: Response) => {
   try {
     const { location, status } = req.query;
