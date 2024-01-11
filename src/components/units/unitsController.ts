@@ -8,8 +8,9 @@ import {
 } from "../../utils/utils";
 import Jwt, { JwtPayload } from "jsonwebtoken";
 import { Op } from "sequelize";
+import UserRequest from "../../types/userRequest";
 
-export const createUnits = async (req: Request, res: Response) => {
+export const createUnits = async (req: UserRequest, res: Response) => {
   try {
     const {
       name,
@@ -31,11 +32,7 @@ export const createUnits = async (req: Request, res: Response) => {
 
     const id = uuidv4();
 
-    const token = req.cookies.token;
-    const verified = Jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
-    const userId = verified.id;
-
-    console.log("this is the userId: ", userId);
+    const userId = req.user?.id;
 
     const newUnit = await UnitsModel.create({
       ...validate.value,
@@ -53,7 +50,7 @@ export const createUnits = async (req: Request, res: Response) => {
   }
 };
 
-export const updateUnits = async (req: Request, res: Response) => {
+export const updateUnits = async (req: UserRequest, res: Response) => {
   try {
     const { id } = req.params;
     const {
@@ -74,11 +71,7 @@ export const updateUnits = async (req: Request, res: Response) => {
       return res.status(400).json({ Error: validate.error.details[0].message });
     }
 
-    const token = req.cookies.token;
-    const verified = Jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
-    const userId = verified.id;
-
-    console.log(userId);
+    const userId = req.user?.id;
 
     const unit = await UnitsModel.findOne({ where: { id, userId } });
 
@@ -94,8 +87,6 @@ export const updateUnits = async (req: Request, res: Response) => {
       { where: { id }, returning: true }
     );
 
-    console.log(updatedUnits);
-
     return res
       .status(200)
       .json({ updatedUnits, message: "unit updated successfully" });
@@ -105,7 +96,7 @@ export const updateUnits = async (req: Request, res: Response) => {
   }
 };
 
-export const filterUnits = async (req: Request, res: Response) => {
+export const filterUnits = async (req: UserRequest, res: Response) => {
   try {
     const { location, status } = req.query;
 
@@ -146,7 +137,7 @@ export const filterUnits = async (req: Request, res: Response) => {
   }
 };
 
-export const searchUnits = async (req: Request, res: Response) => {
+export const searchUnits = async (req: UserRequest, res: Response) => {
   try {
     const { search } = req.query;
 
@@ -174,13 +165,11 @@ export const searchUnits = async (req: Request, res: Response) => {
   }
 };
 
-export const unitsBeloningToUser = async (req: Request, res: Response) => {
+export const unitsBeloningToUser = async (req: UserRequest, res: Response) => {
   try {
     // const { userId } = req.params; --- if the frontend person chooses to optionally use this approach
 
-    const token = req.cookies.token;
-    const verified = Jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
-    const userId = verified.id;
+    const userId = req.user?.id;
 
     const units = await UnitsModel.findAll({ where: { userId } });
 
@@ -195,13 +184,11 @@ export const unitsBeloningToUser = async (req: Request, res: Response) => {
   }
 };
 
-export const getSingleUnit = async (req: Request, res: Response) => {
+export const getSingleUnit = async (req: UserRequest, res: Response) => {
   try {
     const { id } = req.params;
 
-    const token = req.cookies.token;
-    const verified = Jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
-    const userId = verified.id;
+    const userId = req.user?.id;
 
     const unit = await UnitsModel.findOne({ where: { id, userId } });
 
@@ -216,11 +203,9 @@ export const getSingleUnit = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllAvailableUnits = async (req: Request, res: Response) => {
+export const getAllAvailableUnits = async (req: UserRequest, res: Response) => {
   try {
-    const token = req.cookies.token;
-    const verified = Jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
-    const userId = verified.id;
+    const userId = req.user?.id;
 
     const availableUnits = await UnitsModel.findAll({
       where: {
@@ -236,11 +221,12 @@ export const getAllAvailableUnits = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllUnavailableUnits = async (req: Request, res: Response) => {
+export const getAllUnavailableUnits = async (
+  req: UserRequest,
+  res: Response
+) => {
   try {
-    const token = req.cookies.token;
-    const verified = Jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
-    const userId = verified.id;
+    const userId = req.user?.id;
 
     const unavailableUnits = await UnitsModel.findAll({
       where: {
