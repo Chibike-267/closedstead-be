@@ -44,9 +44,16 @@ passport.serializeUser((user, done) => {
 });
 
 // Google Authentication routes
+// app.get(
+//   "/auth/google",
+//   passport.authenticate("google", { scope: ["email", "profile"] })
+// );
 app.get(
   "/auth/google",
-  passport.authenticate("google", { scope: ["email", "profile"] })
+  passport.authenticate("google", {
+    prompt: "select_account",
+    scope: ["email", "profile"],
+  })
 );
 
 app.get(
