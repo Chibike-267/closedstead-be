@@ -7,10 +7,8 @@ import {
   sendResetPasswordOtp,
   resetPassword,
   getUsers,
-  changePassword,
 } from "./usersController";
-import { AuthMiddleware } from "../../library/middlewares/auth";
-
+import authenticateMiddleware from "../../library/middlewares/auth";
 
 const router = express.Router();
 
@@ -24,7 +22,6 @@ router.post("/logout", logout);
 router.post("/sendResetPasswordOtp", sendResetPasswordOtp);
 router.post("/forgotPassword", forgotPassword);
 router.post("/resetPassword", resetPassword);
-router.get("/getAllUsers", AuthMiddleware.Authenticate("user"), getUsers);
-router.post("/changePassword", changePassword);
+router.get("/getAllUsers", authenticateMiddleware, getUsers);
 
 export default router;

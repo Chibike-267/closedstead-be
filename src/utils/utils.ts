@@ -95,12 +95,28 @@ export const loginUserSchema = Joi.object().keys({
     .required(),
 });
 
-export const changePasswordSchema = Joi.object().keys({
-  // currentPassword: Joi.string().required(),
-  newPassword: Joi.string().required(),
-  confirmPassword: Joi.any()
-    .equal(Joi.ref("newPassword"))
-    .required()
-    .label("Confirm password")
-    .messages({ "any.only": "{{#label}} does not match" }),
+//=============================== Units Schema ===============================/
+
+export const createUnitsSchema = Joi.object().keys({
+  name: Joi.string().required(),
+  number: Joi.number().required(),
+  status: Joi.string().required(),
+  numberOfBedrooms: Joi.number().required(),
+  price: Joi.number().required(),
+  pictures: Joi.array().items(Joi.string()),
+  type: Joi.string(),
+  location: Joi.string().required(),
+  description: Joi.string().required(),
+});
+
+export const updateUnitsSchema = Joi.object().keys({
+  name: Joi.string(),
+  number: Joi.number(),
+  status: Joi.string(),
+  numberOfBedrooms: Joi.number(),
+  price: Joi.number(),
+  pictures: Joi.array().items(Joi.string()),
+  type: Joi.string(),
+  location: Joi.string(),
+  description: Joi.string(),
 });
