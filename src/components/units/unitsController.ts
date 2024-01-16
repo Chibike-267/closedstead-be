@@ -242,23 +242,28 @@ export const getAllUnavailableUnits = async (
   }
 };
 
-export const unitsLocationByUser = async (req: Request, res: Response) => {
+export const getUserUnitLocations = async (req: Request, res: Response) => {
   try {
-    // const { userId } = req.params; --- if the frontend person chooses to optionally use this approach
 
-    const token = req.cookies.token;
-    const verified = Jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
-    const userId = verified.id;
+    const userId = (req.user as any)?.id;
 
-    const units = await UnitsModel.findAll({ where: { userId } });
 
-    if (!units) {
-      return res.status(404).json({ message: "units not found" });
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ error: "Unauthorized, user ID not available" });
     }
 
-    return res.status(200).json({ units });
+    const units = await UnitsModel.findAll({
+      where: { userId },
+      attributes: ["location"], // Retrieve only the 'location' attribute
+    });
+
+    const locations = units.map((unit) => unit.location);
+
+    return res.status(200).json({ locations });
   } catch (error) {
-    console.error("Error during unit update:", error);
+    console.error("Error fetching user unit locations", error);
     return res.status(500).json({ message: "something went wrong" });
   }
 };

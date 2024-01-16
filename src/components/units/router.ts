@@ -9,6 +9,7 @@ import {
   searchUnits,
   unitsBeloningToUser,
   updateUnits,
+  getUserUnitLocations,
 } from "./unitsController";
 
 const router = express.Router();
@@ -27,6 +28,11 @@ router.get(
   "/unavailable-units",
   authenticateMiddleware,
   getAllUnavailableUnits
+);
+router.get(
+  "/units/user-locations",
+  authenticateMiddleware,
+  getUserUnitLocations
 );
 
 export default router;
