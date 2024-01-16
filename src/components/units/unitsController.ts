@@ -185,3 +185,24 @@ export const getAllUnavailableUnits = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const unitsLocationByUser = async (req: Request, res: Response) => {
+  try {
+    // const { userId } = req.params; --- if the frontend person chooses to optionally use this approach
+
+    const token = req.cookies.token;
+    const verified = Jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    const userId = verified.id;
+
+    const units = await UnitsModel.findAll({ where: { userId } });
+
+    if (!units) {
+      return res.status(404).json({ message: "units not found" });
+    }
+
+    return res.status(200).json({ units });
+  } catch (error) {
+    console.error("Error during unit update:", error);
+    return res.status(500).json({ message: "something went wrong" });
+  }
+};
