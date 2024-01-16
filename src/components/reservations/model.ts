@@ -1,6 +1,8 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 import db from "../../db";
 import { UsersModel } from "../users/model";
+import { UnitsModel } from "../units/model";
+
 
 class ReservationsModel extends Model {
   public id!: string;
@@ -10,7 +12,7 @@ class ReservationsModel extends Model {
   public checkInDate!: Date;
   public checkOutDate!: Date;
   public userId!: string;
-  public unitId!: string;
+  public unitId!: string | null;
   public status!: "cancelled" | "stayed" | "ongoing";
   public createdAt!: Date;
   public updatedAt!: Date;
@@ -74,5 +76,7 @@ ReservationsModel.init(
 );
 
 ReservationsModel.belongsTo(UsersModel, { foreignKey: "userId" });
+UnitsModel.hasMany(ReservationsModel, { foreignKey: 'unitId' });
+
 
 export { db, ReservationsModel };
