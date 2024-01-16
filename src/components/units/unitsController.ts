@@ -9,6 +9,7 @@ import {
 import Jwt, { JwtPayload } from "jsonwebtoken";
 import { Op } from "sequelize";
 import UserRequest from "../../types/userRequest";
+import { Sequelize } from "sequelize";
 
 export const createUnits = async (req: UserRequest, res: Response) => {
   try {
@@ -244,9 +245,7 @@ export const getAllUnavailableUnits = async (
 
 export const getUserUnitLocations = async (req: Request, res: Response) => {
   try {
-
     const userId = (req.user as any)?.id;
-
 
     if (!userId) {
       return res
@@ -256,7 +255,7 @@ export const getUserUnitLocations = async (req: Request, res: Response) => {
 
     const units = await UnitsModel.findAll({
       where: { userId },
-      attributes: ["location"], // Retrieve only the 'location' attribute
+      attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('location')), 'location']],
     });
 
     const locations = units.map((unit) => unit.location);
