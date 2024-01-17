@@ -9,12 +9,10 @@ import {
   resetPasswordSchema,
   bcryptEncoded,
   forgotPasswordSchema,
-  changePasswordSchema,
 } from "../../utils/utils";
 import { Request, Response } from "express";
 import { UsersModel } from "./model";
 import { v4 as uuidv4 } from "uuid";
-import bcrypt from "bcryptjs";
 import generateVerifcationOTP from "../../library/helpers/generateVerifcationOTP";
 import sendResetOTP from "../../library/helpers/requestResetOTP";
 
@@ -235,45 +233,5 @@ export const getUsers = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error fetching users:", error);
     return res.status(500).json({ error, message: "error fetching users" });
-  }
-};
-// ============================ CHANGE PASSWORD SECTION ===================== //
-// ============================ ==================== ===================== //
-
-
-export const changePassword = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const { error, value } = changePasswordSchema.validate(req.body);
-
-    if (error) {
-      return res.status(400).json({ error: error.details[0].message });
-    }
-
-    const user = await UsersModel.findByPk(id);
-
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    const userPassword = user.get("password");
-
-    const isPasswordValid = await bcrypt.compare(
-      value.currentPassword.trim(),
-      userPassword as string
-    );
-
-    if (!isPasswordValid) {
-      return res.status(401).json({ error: "Current password is incorrect" });
-    }
-
-    const hashedPassword = await bcrypt.hash(value.newPassword, 10);
-
-    await user.update({ password: hashedPassword });
-
-    return res.status(200).json({ message: "Password updated successfully" });
-  } catch (error) {
-    console.error("Error changing password:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
