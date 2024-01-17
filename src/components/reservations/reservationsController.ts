@@ -19,8 +19,10 @@ export const createReservation = async (req: UserRequest, res: Response) => {
       checkInDate,
       checkOutDate,
       status,
+      unitPrice,
       unitId,
     } = req.body;
+    console.log(req.body);
 
     const validate = createReservationSchema.validate(req.body, option);
 
@@ -50,6 +52,7 @@ export const createReservation = async (req: UserRequest, res: Response) => {
       customerPhone,
       checkInDate,
       checkOutDate,
+      unitPrice,
       userId,
       unitId,
       status,

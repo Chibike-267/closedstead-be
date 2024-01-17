@@ -125,6 +125,7 @@ export const createReservationSchema = Joi.object().keys({
   customerName: Joi.string().required(),
   customerEmail: Joi.string().trim().lowercase().email().required(),
   customerPhone: Joi.string().required(),
+  unitPrice: Joi.string().required(),
   checkInDate: Joi.date().required(),
   checkOutDate: Joi.date().required(),
   status: Joi.string().max(255).required(),
@@ -133,6 +134,7 @@ export const createReservationSchema = Joi.object().keys({
 
 export const updateReservationSchema = Joi.object().keys({
   customerName: Joi.string(),
+  unitPrice: Joi.string().required(),
   customerEmail: Joi.string().trim().lowercase().email(),
   customerPhone: Joi.string(),
   checkInDate: Joi.date(),

@@ -11,6 +11,7 @@ class ReservationsModel extends Model {
   public customerPhone!: string;
   public checkInDate!: Date;
   public checkOutDate!: Date;
+  public unitPrice!: string;
   public userId!: string;
   public unitId!: string | null;
   public status!: "cancelled" | "stayed" | "ongoing";
@@ -35,6 +36,10 @@ ReservationsModel.init(
       allowNull: false,
     },
     customerPhone: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    unitPrice: {
       type: DataTypes.STRING,
       allowNull: false,
     },
