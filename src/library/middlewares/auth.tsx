@@ -30,7 +30,9 @@ const authenticateMiddleware = async (req: Request, res: Response , next: NextFu
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    req.user = user.dataValues
+    // req.user = user.dataValues
+    req.user = user;
+
     next();
   } catch (error) {
     console.error('Authentication error:', error);
