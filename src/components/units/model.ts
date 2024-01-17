@@ -5,10 +5,10 @@ import { UsersModel } from "../users/model";
 class UnitsModel extends Model {
   public id!: string;
   public name!: string;
-  public number!: number;
+  public number!: string;
   public status!: "available" | "occupied";
-  public numberOfBedrooms!: number;
-  public price!: number;
+  public numberOfBedrooms!: string;
+  public price!: string;
   public pictures?: string[];
   public type?: string;
   public userId?: string;
@@ -31,20 +31,25 @@ UnitsModel.init(
       allowNull: false,
     },
     number: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
     status: {
       type: DataTypes.ENUM("available", "occupied"),
       defaultValue: "available",
     },
     numberOfBedrooms: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
     price: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
     pictures: {
-      type: DataTypes.JSON,
+      type: DataTypes.STRING,
+      get() {
+        if (this.getDataValue("pictures")) {
+          return this.getDataValue("pictures").split(",");
+        }
+      }
     },
 
     type: {
