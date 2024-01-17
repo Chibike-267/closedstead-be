@@ -99,10 +99,10 @@ export const loginUserSchema = Joi.object().keys({
 
 export const createUnitsSchema = Joi.object().keys({
   name: Joi.string().required(),
-  number: Joi.number().required(),
+  number: Joi.string().required(),
   status: Joi.string().required(),
   numberOfBedrooms: Joi.number().required(),
-  price: Joi.number().required(),
+  price: Joi.string().required(),
   pictures: Joi.array().items(Joi.string()),
   type: Joi.string(),
   location: Joi.string().required(),
