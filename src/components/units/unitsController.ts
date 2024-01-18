@@ -9,6 +9,7 @@ import {
 import Jwt, { JwtPayload } from "jsonwebtoken";
 import { Op } from "sequelize";
 import UserRequest from "../../types/userRequest";
+import { Sequelize } from "sequelize";
 
 export const createUnits = async (req: UserRequest, res: Response) => {
   try {
@@ -23,7 +24,9 @@ export const createUnits = async (req: UserRequest, res: Response) => {
       location,
       description,
     } = req.body;
-
+    // console.log(req.files);
+    // return res.send(req.files);
+console.log(req.body)
     const validate = createUnitsSchema.validate(req.body, option);
 
     if (validate.error) {
@@ -34,10 +37,18 @@ export const createUnits = async (req: UserRequest, res: Response) => {
 
     const userId = req.user?.id;
 
+    // const links = req.files.map((file) => file.path);
+
+    let links = [];
+    if (Array.isArray(req.files) && req.files.length > 0) {
+      links = req.files.map((item: Record<string, any>) => item.path);
+    }
+
     const newUnit = await UnitsModel.create({
       ...validate.value,
       id,
       userId,
+      pictures: links.join(","),
     });
 
     return res.status(201).json({
@@ -239,5 +250,29 @@ export const getAllUnavailableUnits = async (
   } catch (error) {
     console.error("Error retrieving unavailable units:", error);
     return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getUserUnitLocations = async (req: Request, res: Response) => {
+  try {
+    const userId = (req.user as any)?.id;
+
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ error: "Unauthorized, user ID not available" });
+    }
+
+    const units = await UnitsModel.findAll({
+      where: { userId },
+      attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('location')), 'location']],
+    });
+
+    const locations = units.map((unit) => unit.location);
+
+    return res.status(200).json({ locations });
+  } catch (error) {
+    console.error("Error fetching user unit locations", error);
+    return res.status(500).json({ message: "something went wrong" });
   }
 };

@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import authenticateMiddleware from "../../library/middlewares/auth";
+import { upload } from "../../library/helpers/uploadImage";
 import {
   createUnits,
   filterUnits,
@@ -9,6 +10,7 @@ import {
   searchUnits,
   unitsBeloningToUser,
   updateUnits,
+  getUserUnitLocations,
 } from "./unitsController";
 
 const router = express.Router();
@@ -16,7 +18,12 @@ const router = express.Router();
 router.get("/users", (req: Request, res: Response) => {
   res.status(200).json({ message: "success" });
 });
-router.post("/create-unit", authenticateMiddleware, createUnits);
+router.post(
+  "/create-unit",
+  authenticateMiddleware,
+  upload.array("pictures", 4),
+  createUnits
+);
 router.put("/update-unit/:id", authenticateMiddleware, updateUnits);
 router.get("/my-units", authenticateMiddleware, unitsBeloningToUser);
 router.get("/filter-units", authenticateMiddleware, filterUnits);
@@ -27,6 +34,11 @@ router.get(
   "/unavailable-units",
   authenticateMiddleware,
   getAllUnavailableUnits
+);
+router.get(
+  "/units/user-locations",
+  authenticateMiddleware,
+  getUserUnitLocations
 );
 
 export default router;
