@@ -44,12 +44,12 @@ UnitsModel.init(
       type: DataTypes.STRING,
     },
     pictures: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(1000),
       get() {
         if (this.getDataValue("pictures")) {
           return this.getDataValue("pictures").split(",");
         }
-      }
+      },
     },
 
     type: {

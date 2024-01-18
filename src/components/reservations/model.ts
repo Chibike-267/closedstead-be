@@ -13,7 +13,7 @@ class ReservationsModel extends Model {
   public checkOutDate!: Date;
   public userId!: string;
   public unitId!: string | null;
-  public status!: "cancelled" | "stayed" | "ongoing";
+  public status!: "cancelled" | "stayed" | "reserved" | "in-residence";
   public createdAt!: Date;
   public updatedAt!: Date;
 }
@@ -55,8 +55,8 @@ ReservationsModel.init(
       allowNull: false,
     },
     status: {
-      type: DataTypes.ENUM("cancelled", "stayed", "ongoing"),
-      defaultValue: "ongoing",
+      type: DataTypes.ENUM("cancelled", "stayed", "reserved", "in-residence"),
+      defaultValue: "reserved",
     },
     createdAt: {
       type: DataTypes.DATE,
