@@ -15,14 +15,12 @@ export const createReservation = async (req: UserRequest, res: Response) => {
     const {
       customerName,
       customerEmail,
-      customerPhone,
+      phoneNumber,
       checkInDate,
       checkOutDate,
-      status,
-      unitPrice,
       unitId,
+      unitPrice,
     } = req.body;
-    console.log(req.body);
 
     const validate = createReservationSchema.validate(req.body, option);
 
@@ -49,13 +47,13 @@ export const createReservation = async (req: UserRequest, res: Response) => {
       id: uuidv4(),
       customerName,
       customerEmail,
-      customerPhone,
+      phoneNumber,
       checkInDate,
       checkOutDate,
       unitPrice,
       userId,
       unitId,
-      status,
+      status: "reserved",
     });
 
     return res.status(201).json({
@@ -74,10 +72,11 @@ export const updateReservation = async (req: UserRequest, res: Response) => {
     const {
       customerName,
       customerEmail,
-      customerPhone,
+      phoneNumber,
       checkInDate,
       checkOutDate,
       status,
+      unitPrice,
     } = req.body;
 
     // Validate request body

@@ -4,6 +4,7 @@ dotenv.config();
 import { createServer } from "http";
 import app from "../app";
 import db from "../db";
+import { alt } from "joi";
 // import "../src/components/OAuth/index";
 
 const port = process.env.PORT ?? 3000;
@@ -12,7 +13,7 @@ const server = createServer(app);
 
 //please for whatever reason don't just think of {force:true}
 
-db.sync()
+db.sync({alter:true})
   .then(() => console.log("database connected successfully"))
   .catch((err) => {
     console.error("Unable to connect to you to your database:", err);

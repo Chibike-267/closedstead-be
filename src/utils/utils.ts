@@ -99,10 +99,10 @@ export const loginUserSchema = Joi.object().keys({
 
 export const createUnitsSchema = Joi.object().keys({
   name: Joi.string().required(),
-  number: Joi.number().required(),
+  number: Joi.string().required(),
   status: Joi.string().required(),
-  numberOfBedrooms: Joi.number().required(),
-  price: Joi.number().required(),
+  numberOfBedrooms: Joi.string().required(),
+  price: Joi.string().required(),
   pictures: Joi.array().items(Joi.string()),
   type: Joi.string(),
   location: Joi.string().required(),
@@ -124,8 +124,8 @@ export const updateUnitsSchema = Joi.object().keys({
 export const createReservationSchema = Joi.object().keys({
   customerName: Joi.string().required(),
   customerEmail: Joi.string().trim().lowercase().email().required(),
-  customerPhone: Joi.string().required(),
-  unitPrice: Joi.string().required(),
+  phoneNumber: Joi.string().required(),
+  // unitPrice: Joi.string().required(),
   checkInDate: Joi.date().required(),
   checkOutDate: Joi.date().required(),
   status: Joi.string().max(255).required(),
@@ -136,7 +136,7 @@ export const updateReservationSchema = Joi.object().keys({
   customerName: Joi.string(),
   unitPrice: Joi.string().required(),
   customerEmail: Joi.string().trim().lowercase().email(),
-  customerPhone: Joi.string(),
+  phoneNumber: Joi.string(),
   checkInDate: Joi.date(),
   checkOutDate: Joi.date(),
   status: Joi.string(),

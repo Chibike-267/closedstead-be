@@ -35,10 +35,16 @@ export const createUnits = async (req: UserRequest, res: Response) => {
 
     const userId = req.user?.id;
 
+    let links = [];
+    if (Array.isArray(req.files) && req.files.length > 0) {
+      links = req.files.map((item: Record<string, any>) => item.path);
+    }
+
     const newUnit = await UnitsModel.create({
       ...validate.value,
       id,
       userId,
+      pictures: links.join(","),
     });
 
     return res.status(201).json({
