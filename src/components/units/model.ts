@@ -18,6 +18,7 @@ class UnitsModel extends Model {
   public updatedAt!: Date;
 }
 
+
 UnitsModel.init(
   {
     id: {
