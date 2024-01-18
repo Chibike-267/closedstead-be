@@ -24,9 +24,7 @@ export const createUnits = async (req: UserRequest, res: Response) => {
       location,
       description,
     } = req.body;
-    // console.log(req.files);
-    // return res.send(req.files);
-console.log(req.body)
+
     const validate = createUnitsSchema.validate(req.body, option);
 
     if (validate.error) {
@@ -36,8 +34,6 @@ console.log(req.body)
     const id = uuidv4();
 
     const userId = req.user?.id;
-
-    // const links = req.files.map((file) => file.path);
 
     let links = [];
     if (Array.isArray(req.files) && req.files.length > 0) {
