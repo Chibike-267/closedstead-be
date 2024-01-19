@@ -21,12 +21,13 @@ export const createReservation = async (req: UserRequest, res: Response) => {
       unitId,
       unitPrice,
     } = req.body;
+    console.log(req.body);
 
     const validate = createReservationSchema.validate(req.body, option);
 
-    if (validate.error) {
-      return res.status(400).json({ error: validate.error.details[0].message });
-    }
+    // if (validate.error) {
+    //   return res.status(400).json({ error: validate.error.details[0].message });
+    // }
 
     // Ensure unitId is present
     if (!unitId) {
