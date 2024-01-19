@@ -20,7 +20,7 @@ router.get("/users", (req: Request, res: Response) => {
 router.post(
   "/create-unit",
   authenticateMiddleware,
-  upload.array("pictures", 4),
+  upload.array("pictures", 6),
   createUnits
 );
 router.put("/update-unit/:id", authenticateMiddleware, updateUnits);
