@@ -101,7 +101,7 @@ export const createUnitsSchema = Joi.object().keys({
   name: Joi.string().required(),
   number: Joi.string().required(),
   status: Joi.string().required(),
-  numberOfBedrooms: Joi.number().required(),
+  numberOfBedrooms: Joi.string().required(),
   price: Joi.string().required(),
   pictures: Joi.array().items(Joi.string()),
   type: Joi.string(),

@@ -38,8 +38,6 @@ export const createUnits = async (req: UserRequest, res: Response) => {
 
     const userId = req.user?.id;
 
-    // const links = req.files.map((file) => file.path);
-
     let links = [];
     if (Array.isArray(req.files) && req.files.length > 0) {
       links = req.files.map((item: Record<string, any>) => item.path);

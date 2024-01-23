@@ -18,7 +18,6 @@ export const createReservation = async (req: UserRequest, res: Response) => {
       customerPhone,
       checkInDate,
       checkOutDate,
-      status,
       unitId,
     } = req.body;
 
@@ -52,7 +51,7 @@ export const createReservation = async (req: UserRequest, res: Response) => {
       checkOutDate,
       userId,
       unitId,
-      status,
+      status: "reserved",
     });
 
     return res.status(201).json({
