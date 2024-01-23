@@ -5,7 +5,10 @@ import {
   updateReservation,
   reservationBelongingToUser,
   reservationBelongingToUnit,
-  getSingleReservation
+  getSingleReservation,
+  checkIn,
+  checkOut,
+  cancell
 
 } from "./reservationsController";
 
@@ -19,5 +22,8 @@ router.put("/update-reservation/:id", authenticateMiddleware, updateReservation)
 router.get("/reservations/user", authenticateMiddleware, reservationBelongingToUser);
 router.get("/reservations/unit/:unitId", authenticateMiddleware, reservationBelongingToUnit);
 router.get("/single-reservations/:id", authenticateMiddleware, getSingleReservation);
+router.put("/check-in/:id", authenticateMiddleware, checkIn);
+router.put("/check-out/:id", authenticateMiddleware, checkOut);
+router.put("/cancell/:id", authenticateMiddleware, cancell);
 
 export default router;
