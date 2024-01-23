@@ -24,7 +24,12 @@ router.post(
   upload.array("pictures", 6),
   createUnits
 );
-router.put("/update-unit/:id", authenticateMiddleware, updateUnits);
+router.put(
+  "/update-unit/:id",
+  authenticateMiddleware,
+  upload.array("pictures", 6),
+  updateUnits
+);
 router.get("/my-units", authenticateMiddleware, unitsBeloningToUser);
 router.get("/filter-units", authenticateMiddleware, filterUnits);
 router.get("/search-units", authenticateMiddleware, searchUnits);

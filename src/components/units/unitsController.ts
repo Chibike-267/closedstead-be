@@ -10,6 +10,7 @@ import Jwt, { JwtPayload } from "jsonwebtoken";
 import { Op } from "sequelize";
 import UserRequest from "../../types/userRequest";
 import { Sequelize } from "sequelize";
+import { type } from "os";
 
 export const createUnits = async (req: UserRequest, res: Response) => {
   try {
@@ -26,7 +27,7 @@ export const createUnits = async (req: UserRequest, res: Response) => {
     } = req.body;
     // console.log(req.files);
     // return res.send(req.files);
-console.log(req.body)
+    console.log(req.body);
     const validate = createUnitsSchema.validate(req.body, option);
 
     if (validate.error) {
@@ -65,17 +66,10 @@ export const updateUnits = async (req: UserRequest, res: Response) => {
   try {
     const { id } = req.params;
     const {
-      name,
-      number,
-      status,
-      numberOfBedrooms,
-      price,
       pictures,
-      type,
-      location,
-      description,
+      ...rest
     } = req.body;
-
+   
     const validate = updateUnitsSchema.validate(req.body, option);
 
     if (validate.error) {
@@ -89,15 +83,16 @@ export const updateUnits = async (req: UserRequest, res: Response) => {
     if (!unit) {
       return res.status(404).json({ message: "unit not found" });
     }
-
+  
     const [affectedRows, updatedUnits] = await UnitsModel.update(
       {
-        ...validate.value,
+        ...rest,
         userId,
       },
       { where: { id }, returning: true }
     );
 
+    console.log(req.body);
     return res
       .status(200)
       .json({ updatedUnits, message: "unit updated successfully" });
@@ -265,7 +260,9 @@ export const getUserUnitLocations = async (req: Request, res: Response) => {
 
     const units = await UnitsModel.findAll({
       where: { userId },
-      attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('location')), 'location']],
+      attributes: [
+        [Sequelize.fn("DISTINCT", Sequelize.col("location")), "location"],
+      ],
     });
 
     const locations = units.map((unit) => unit.location);
