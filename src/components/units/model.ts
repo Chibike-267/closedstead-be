@@ -44,7 +44,7 @@ UnitsModel.init(
       type: DataTypes.STRING,
     },
     pictures: {
-      type: DataTypes.STRING(1000),
+      type: DataTypes.STRING(2048),
       get() {
         if (this.getDataValue("pictures")) {
           return this.getDataValue("pictures").split(",");

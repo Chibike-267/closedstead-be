@@ -19,15 +19,15 @@ export const createReservation = async (req: UserRequest, res: Response) => {
       checkInDate,
       checkOutDate,
       unitId,
-      unitPrice,
+      location,
+      // price,
     } = req.body;
-    console.log(req.body);
 
     const validate = createReservationSchema.validate(req.body, option);
 
-    // if (validate.error) {
-    //   return res.status(400).json({ error: validate.error.details[0].message });
-    // }
+    if (validate.error) {
+      return res.status(400).json({ error: validate.error.details[0].message });
+    }
 
     // Ensure unitId is present
     if (!unitId) {
@@ -43,7 +43,7 @@ export const createReservation = async (req: UserRequest, res: Response) => {
 
     const userId = req.user?.id;
     console.log("this is the userId: ", userId);
-
+    console.log(req.body);
     const newReservation = await ReservationsModel.create({
       id: uuidv4(),
       customerName,
@@ -51,8 +51,9 @@ export const createReservation = async (req: UserRequest, res: Response) => {
       phoneNumber,
       checkInDate,
       checkOutDate,
-      unitPrice,
+      // price,
       userId,
+      location,
       unitId,
       status: "reserved",
     });
@@ -77,8 +78,11 @@ export const updateReservation = async (req: UserRequest, res: Response) => {
       checkInDate,
       checkOutDate,
       status,
-      unitPrice,
+      location,
+      // price,
     } = req.body;
+    console.log(req.body)
+    console.log(req.body.id)
 
     // Validate request body
     const validate = updateReservationSchema.validate(req.body, option);

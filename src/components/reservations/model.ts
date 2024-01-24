@@ -3,7 +3,6 @@ import db from "../../db";
 import { UsersModel } from "../users/model";
 import { UnitsModel } from "../units/model";
 
-
 class ReservationsModel extends Model {
   public id!: string;
   public customerName!: string;
@@ -11,7 +10,7 @@ class ReservationsModel extends Model {
   public phoneNumber!: string;
   public checkInDate!: Date;
   public checkOutDate!: Date;
-  public unitPrice!: string;
+  // public unitPrice!: string;
   public userId!: string;
   public unitId!: string | null;
   public status!: "cancelled" | "stayed" | "reserved" | "in-residence";
@@ -39,7 +38,11 @@ ReservationsModel.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    unitPrice: {
+    price: {
+      type: DataTypes.STRING,
+      // allowNull: false,
+    },
+    location: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -81,7 +84,6 @@ ReservationsModel.init(
 );
 
 ReservationsModel.belongsTo(UsersModel, { foreignKey: "userId" });
-UnitsModel.hasMany(ReservationsModel, { foreignKey: 'unitId' });
-
+UnitsModel.hasMany(ReservationsModel, { foreignKey: "unitId" });
 
 export { db, ReservationsModel };

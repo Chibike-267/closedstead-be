@@ -38,22 +38,21 @@ UsersModel.init(
       allowNull: false,
     },
     firstName: {
-      type: DataTypes.STRING,
-      defaultValue: "",
+      type: DataTypes.TEXT,
       allowNull: true,
     },
     surname: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: true,
     },
     fullname: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: true,
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
+      // unique: true,
     },
     password: {
       type: DataTypes.STRING,
