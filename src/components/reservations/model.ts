@@ -65,7 +65,15 @@ ReservationsModel.init(
     status: {
       type: DataTypes.ENUM("cancelled", "stayed", "reserved", "in-residence"),
       defaultValue: "reserved",
-    },
+      allowNull: false,
+      validate: {
+        isIn: {
+          args: [["cancelled", "stayed", "reserved", "in-residence"]],
+          msg: "Invalid status value",
+        },
+      },
+  },
+
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,

@@ -199,3 +199,116 @@ export const getSingleReservation = async (req: UserRequest, res: Response) => {
     return res.status(500).json({ message: "something went wrong" });
   }
 };
+
+
+
+export const checkIn = async (req: UserRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const userId = req.user?.id;
+
+    const reservation = await ReservationsModel.findOne({
+      where: { id, userId },
+    });
+
+    if (!reservation) {
+      return res.status(404).json({ message: "Reservation not found" });
+    }
+
+    if (reservation.status !== "reserved") {
+      return res.status(400).json({ message: "Reservation is not in the 'reserved' state" });
+    }
+
+    await ReservationsModel.update(
+      { status: "in-residence" },
+      { where: { id } }
+    );
+
+    const updatedReservation = await ReservationsModel.findByPk(id);
+
+    return res.status(200).json({
+      updatedReservation,
+      message: "Check-in successful",
+    });
+  } catch (error: any) {
+    console.error("Error Checking in Client:", error);
+    return res.status(500).json({ error: error.message || "Something went wrong" });
+  }
+};
+
+
+export const checkOut = async (req: UserRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const userId = req.user?.id;
+
+    const reservation = await ReservationsModel.findOne({
+      where: { id, userId },
+    });
+
+    if (!reservation) {
+      return res.status(404).json({ message: "Reservation not found" });
+    }
+
+    if (reservation.status !== "in-residence") {
+      return res.status(400).json({ message: "Reservation is not in the 'In residence' state" });
+    }
+
+    await ReservationsModel.update(
+      { status: "stayed" },
+      { where: { id } }
+    );
+
+    const updatedReservation = await ReservationsModel.findByPk(id);
+
+    return res.status(200).json({
+      updatedReservation,
+      message: "Check-out successful",
+    });
+  } catch (error: any) {
+    console.error("Error Checking out Client:", error);
+    return res.status(500).json({ error: error.message || "Something went wrong" });
+  }
+};
+
+
+export const cancell = async (req: UserRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const userId = req.user?.id;
+
+    const reservation = await ReservationsModel.findOne({
+      where: { id, userId },
+    });
+
+    if (!reservation) {
+      return res.status(404).json({ message: "Reservation not found" });
+    }
+
+    if (reservation.status !== "cancelled") {
+      await ReservationsModel.update(
+        { status: "cancelled" },
+        { where: { id } }
+      );
+  
+      
+    const updatedReservation = await ReservationsModel.findByPk(id);
+
+    return res.status(200).json({
+      updatedReservation,
+      message: "Reservation successfully cancelled",
+    });
+  } else {
+    return res.status(400).json({ message: "Reservation has already been cancelled" });
+  }
+}catch (error: any) {
+    console.error("Error Checking out Client:", error);
+    return res.status(500).json({ error: error.message || "Something went wrong" });
+  }
+};
+
+
+
