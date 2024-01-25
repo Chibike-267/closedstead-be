@@ -261,7 +261,9 @@ export const getUserUnitLocations = async (req: Request, res: Response) => {
 
     const units = await UnitsModel.findAll({
       where: { userId },
-      attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('location')), 'location']],
+      attributes: [
+        [Sequelize.fn("DISTINCT", Sequelize.col("location")), "location"],
+      ],
     });
 
     const locations = units.map((unit) => unit.location);
