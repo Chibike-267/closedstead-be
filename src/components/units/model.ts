@@ -43,14 +43,15 @@ UnitsModel.init(
     price: {
       type: DataTypes.STRING,
     },
+
     pictures: {
-      type: DataTypes.STRING(1000),
-      get() {
-        if (this.getDataValue("pictures")) {
-          return this.getDataValue("pictures").split(",");
-        }
-      },
-    },
+  type: DataTypes.STRING(2048),
+  get() {
+    if (this.getDataValue("pictures")) {
+      return this.getDataValue("pictures").split(",");
+    }
+  }
+},
 
     type: {
       type: DataTypes.STRING,
