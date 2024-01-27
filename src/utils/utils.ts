@@ -124,18 +124,18 @@ export const updateUnitsSchema = Joi.object().keys({
 export const createReservationSchema = Joi.object().keys({
   customerName: Joi.string().required(),
   customerEmail: Joi.string().trim().lowercase().email().required(),
-  phoneNumber: Joi.string().required(),
+  customerPhone: Joi.string().required(),
   checkInDate: Joi.date().required(),
-  location: Joi.string().required(),
+  // location: Joi.string().required(),
   checkOutDate: Joi.date().required(),
   unitId: Joi.string().optional(), // Make unitId optional in the schema
 });
 
 export const updateReservationSchema = Joi.object().keys({
   customerName: Joi.string(),
-  location: Joi.string().required(),
+  // location: Joi.string().required(),
   customerEmail: Joi.string().trim().lowercase().email(),
-  phoneNumber: Joi.string(),
+  customerPhone: Joi.string(),
   checkInDate: Joi.date(),
   checkOutDate: Joi.date(),
   // status: Joi.string(),

@@ -7,10 +7,9 @@ class ReservationsModel extends Model {
   public id!: string;
   public customerName!: string;
   public customerEmail!: string;
-  public phoneNumber!: string;
+  public customerPhone!: string;
   public checkInDate!: Date;
   public checkOutDate!: Date;
-  // public unitPrice!: string;
   public userId!: string;
   public unitId!: string | null;
   public status!: "cancelled" | "stayed" | "reserved" | "in-residence";
@@ -34,15 +33,7 @@ ReservationsModel.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    phoneNumber: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    price: {
-      type: DataTypes.STRING,
-      // allowNull: false,
-    },
-    location: {
+    customerPhone: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -72,7 +63,7 @@ ReservationsModel.init(
           msg: "Invalid status value",
         },
       },
-  },
+    },
 
     createdAt: {
       type: DataTypes.DATE,

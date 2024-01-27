@@ -15,12 +15,10 @@ export const createReservation = async (req: UserRequest, res: Response) => {
     const {
       customerName,
       customerEmail,
-      phoneNumber,
+      customerPhone,
       checkInDate,
       checkOutDate,
       unitId,
-      location,
-      // price,
     } = req.body;
 
     const validate = createReservationSchema.validate(req.body, option);
@@ -43,17 +41,15 @@ export const createReservation = async (req: UserRequest, res: Response) => {
 
     const userId = req.user?.id;
     console.log("this is the userId: ", userId);
-    console.log(req.body);
+
     const newReservation = await ReservationsModel.create({
       id: uuidv4(),
       customerName,
       customerEmail,
-      phoneNumber,
+      customerPhone,
       checkInDate,
       checkOutDate,
-      // price,
       userId,
-      location,
       unitId,
       status: "reserved",
     });
@@ -74,15 +70,11 @@ export const updateReservation = async (req: UserRequest, res: Response) => {
     const {
       customerName,
       customerEmail,
-      phoneNumber,
+      customerPhone,
       checkInDate,
       checkOutDate,
       status,
-      location,
-      // price,
     } = req.body;
-    console.log(req.body)
-    console.log(req.body.id)
 
     // Validate request body
     const validate = updateReservationSchema.validate(req.body, option);
@@ -200,8 +192,6 @@ export const getSingleReservation = async (req: UserRequest, res: Response) => {
   }
 };
 
-
-
 export const checkIn = async (req: UserRequest, res: Response) => {
   try {
     const { id } = req.params;
@@ -217,7 +207,9 @@ export const checkIn = async (req: UserRequest, res: Response) => {
     }
 
     if (reservation.status !== "reserved") {
-      return res.status(400).json({ message: "Reservation is not in the 'reserved' state" });
+      return res
+        .status(400)
+        .json({ message: "Reservation is not in the 'reserved' state" });
     }
 
     await ReservationsModel.update(
@@ -233,10 +225,11 @@ export const checkIn = async (req: UserRequest, res: Response) => {
     });
   } catch (error: any) {
     console.error("Error Checking in Client:", error);
-    return res.status(500).json({ error: error.message || "Something went wrong" });
+    return res
+      .status(500)
+      .json({ error: error.message || "Something went wrong" });
   }
 };
-
 
 export const checkOut = async (req: UserRequest, res: Response) => {
   try {
@@ -253,13 +246,12 @@ export const checkOut = async (req: UserRequest, res: Response) => {
     }
 
     if (reservation.status !== "in-residence") {
-      return res.status(400).json({ message: "Reservation is not in the 'In residence' state" });
+      return res
+        .status(400)
+        .json({ message: "Reservation is not in the 'In residence' state" });
     }
 
-    await ReservationsModel.update(
-      { status: "stayed" },
-      { where: { id } }
-    );
+    await ReservationsModel.update({ status: "stayed" }, { where: { id } });
 
     const updatedReservation = await ReservationsModel.findByPk(id);
 
@@ -269,10 +261,11 @@ export const checkOut = async (req: UserRequest, res: Response) => {
     });
   } catch (error: any) {
     console.error("Error Checking out Client:", error);
-    return res.status(500).json({ error: error.message || "Something went wrong" });
+    return res
+      .status(500)
+      .json({ error: error.message || "Something went wrong" });
   }
 };
-
 
 export const cancell = async (req: UserRequest, res: Response) => {
   try {
@@ -293,22 +286,22 @@ export const cancell = async (req: UserRequest, res: Response) => {
         { status: "cancelled" },
         { where: { id } }
       );
-  
-      
-    const updatedReservation = await ReservationsModel.findByPk(id);
 
-    return res.status(200).json({
-      updatedReservation,
-      message: "Reservation successfully cancelled",
-    });
-  } else {
-    return res.status(400).json({ message: "Reservation has already been cancelled" });
-  }
-}catch (error: any) {
+      const updatedReservation = await ReservationsModel.findByPk(id);
+
+      return res.status(200).json({
+        updatedReservation,
+        message: "Reservation successfully cancelled",
+      });
+    } else {
+      return res
+        .status(400)
+        .json({ message: "Reservation has already been cancelled" });
+    }
+  } catch (error: any) {
     console.error("Error Checking out Client:", error);
-    return res.status(500).json({ error: error.message || "Something went wrong" });
+    return res
+      .status(500)
+      .json({ error: error.message || "Something went wrong" });
   }
 };
-
-
-
