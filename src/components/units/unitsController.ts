@@ -274,7 +274,6 @@ export const deleteUnit = async (req: Request, res: Response) => {
     const unitId = req.params.id;
     console.log(unitId);
 
-    // Find the unit by ID
     const unit = await UnitsModel.findOne({
       where: { id: unitId },
     });
@@ -285,7 +284,6 @@ export const deleteUnit = async (req: Request, res: Response) => {
       throw new Error("Unit not found");
     }
 
-    // Delete the unit
     await unit.destroy();
 
     return res.status(201).json({ message: "Unit deleted successfully" });
