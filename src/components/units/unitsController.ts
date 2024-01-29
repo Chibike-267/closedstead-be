@@ -269,7 +269,7 @@ export const getUserUnitLocations = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteUnit = async (req: Request, res: Response) => {
+export const deleteSingleUnit = async (req: Request, res: Response) => {
   try {
     const unitId = req.params.id;
     console.log(unitId);

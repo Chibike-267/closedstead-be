@@ -11,6 +11,7 @@ import {
   unitsBeloningToUser,
   updateUnits,
   getUserUnitLocations,
+  deleteSingleUnit,
 } from "./unitsController";
 
 const router = express.Router();
@@ -34,6 +35,7 @@ router.get("/my-units", authenticateMiddleware, unitsBeloningToUser);
 router.get("/filter-units", authenticateMiddleware, filterUnits);
 router.get("/search-units", authenticateMiddleware, searchUnits);
 router.get("/unit/:id", authenticateMiddleware, getSingleUnit);
+router.get("/delete/:id", authenticateMiddleware, deleteSingleUnit);
 router.get("/available-units", authenticateMiddleware, getAllAvailableUnits);
 router.get(
   "/unavailable-units",
