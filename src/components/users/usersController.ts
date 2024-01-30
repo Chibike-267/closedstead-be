@@ -20,13 +20,16 @@ import sendResetOTP from "../../library/helpers/requestResetOTP";
 export const registerUser = async (req: Request, res: Response) => {
   try {
     const { email, firstName, surname, password, phone } = req.body;
+    console.log(req.body);
 
     const validate = registerUserSchema.validate(req.body, option);
 
+    console.log("I got here 1");
     if (validate.error) {
       return res.status(400).json({ Error: validate.error.details[0].message });
     }
 
+    console.log("I got her 2");
     const exists = await UsersModel.findOne({ where: { email } });
 
     if (exists) {

@@ -13,7 +13,7 @@ const server = createServer(app);
 
 //please for whatever reason don't just think of {force:true}
 
-db.sync({alter:true})
+db.sync({ force: true })
   .then(() => console.log("database connected successfully"))
   .catch((err) => {
     console.error("Unable to connect to you to your database:", err);
