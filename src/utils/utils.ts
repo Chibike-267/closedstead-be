@@ -113,8 +113,15 @@ export const loginUserSchema = Joi.object().keys({
   email: Joi.string().trim().lowercase().required(),
   password: Joi.string()
     .trim()
-    .regex(/^[a-zA-Z0-9]{3,18}$/)
-    .required(),
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#_!*%$])[a-zA-Z0-9@#_!*%$]{3,18}$/
+    )
+    .required()
+    .messages({
+      "string.base": "Password should be a string",
+      "string.empty": "Password is required",
+      "string.pattern.base": "Invalid password format",
+    }),
 });
 
 //=============================== Units Schema ===============================/

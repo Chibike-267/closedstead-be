@@ -67,40 +67,35 @@ app.get(
 app.get(
   "/google/callback",
   passport.authenticate("google", {
-    successRedirect: process.env.CLIENT_URL,
+    successRedirect: "/auth/success",
     failureRedirect: "/auth/failure",
-  }),
-  (req, res) => {
-    const user = req.user as UsersModel;
-    const email = user.email;
-    const id = user.id;
-    const token = generateToken(email, id);
-    const API_ENDPOINT = "http://localhost:3000";
-
-    res.cookie("yourCookieName", token, { httpOnly: true, secure: true });
-
-    res.send(
-      `<script>window.opener.postMessage({ token: '${token}' }, '${API_ENDPOINT}'); window.close();</script>`
-    );
-  }
+  })
 );
 
-// app.get("/auth/success", async (req: Request, res: Response) => {
-//   if (req.user) {
-//     const user = req.user as UsersModel;
-//     const id = user.id;
-//     const email = user.email;
-//     const token = await generateToken(email, id);
-//     res.status(200).json({
-//       error: false,
-//       message: "Successfully Logged in",
-//       user: req.user,
-//       token,
-//     });
-//   } else {
-//     res.status(403).json({ error: true, message: "Not authorized" });
-//   }
-// });
+app.get("/auth/success", async (req: Request, res: Response) => {
+  // console.log("This is the REQUEST... ");
+  // console.log("This is the REQUEST... ");
+  // console.log("This is the REQUEST... ", req);
+
+  if (req.user) {
+    const user = req.user as UsersModel;
+    const id = user.id;
+    const email = user.email;
+    const token = await generateToken(email, id);
+    // res.status(200).json({
+    //   error: false,
+    //   message: "Successfully Logged in",
+    //   user: req.user,
+    //   token,
+    // });
+
+    return res.redirect(`http://localhost:5173/?token=${token}`);
+
+    // return res.redirect("http://localhost:5173/login");
+  } else {
+    res.status(403).json({ error: true, message: "Not authorized" });
+  }
+});
 app.get("/auth/failure", async (req: Request, res: Response) => {
   res.status(401).json({ error: true, message: "Login Failed..." });
 });
