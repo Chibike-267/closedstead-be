@@ -57,9 +57,10 @@ app.get(
 );
 
 app.get(
-  "/google/callback",
+  "/google/callback", 
   passport.authenticate("google", {
     failureRedirect: "/auth/failure",
+    // successRedirect: 'http://localhost:5173/dashboard'
   }),
   (req: Request, res: Response) => {
     res.status(200).json({ message: "successfully logged in" });
