@@ -20,6 +20,7 @@ import sendResetOTP from "../../library/helpers/requestResetOTP";
 export const registerUser = async (req: Request, res: Response) => {
   try {
     const { email, firstName, surname, password, phone } = req.body;
+    console.log(req.body);
 
     const validate = registerUserSchema.validate(req.body, option);
 
@@ -75,6 +76,7 @@ export const login = async (req: Request, res: Response) => {
     if (!exists) {
       return res.status(400).json({ message: "invalid credentials" });
     }
+
     const validPassword = await bcryptDecode(password, exists.password);
     if (!validPassword) {
       return res.status(400).json({ message: "invalid credentials" });

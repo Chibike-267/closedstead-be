@@ -27,7 +27,6 @@ export const createUnits = async (req: UserRequest, res: Response) => {
     } = req.body;
     // console.log(req.files);
     // return res.send(req.files);
-    console.log(req.body);
     const validate = createUnitsSchema.validate(req.body, option);
 
     if (validate.error) {
@@ -56,18 +55,15 @@ export const createUnits = async (req: UserRequest, res: Response) => {
     });
   } catch (error) {
     console.error("Error during unit creation:", error);
-    return res.status(500).json({ message: "something went wrong" });
+    return res.status(500).json({ message: "something went wrong", error });
   }
 };
 
 export const updateUnits = async (req: UserRequest, res: Response) => {
   try {
     const { id } = req.params;
-    const {
-      pictures,
-      ...rest
-    } = req.body;
-   
+    const { pictures, ...rest } = req.body;
+
     const validate = updateUnitsSchema.validate(req.body, option);
 
     if (validate.error) {
@@ -81,7 +77,7 @@ export const updateUnits = async (req: UserRequest, res: Response) => {
     if (!unit) {
       return res.status(404).json({ message: "unit not found" });
     }
-  
+
     const [affectedRows, updatedUnits] = await UnitsModel.update(
       {
         ...rest,
@@ -191,9 +187,7 @@ export const unitsBeloningToUser = async (req: UserRequest, res: Response) => {
 export const getSingleUnit = async (req: UserRequest, res: Response) => {
   try {
     const { id } = req.params;
-
     const userId = req.user?.id;
-
     const unit = await UnitsModel.findOne({ where: { id, userId } });
 
     if (!unit) {

@@ -26,6 +26,7 @@ export const configureGoogleStrategy = () => {
       clientID: process.env.GOOGLE_CLIENT_ID! as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET! as string,
       callbackURL: "http://localhost:3000/google/callback",
+      scope: ["profile", "email"],
       passReqToCallback: true,
     },
     async (
@@ -57,7 +58,9 @@ export const configureGoogleStrategy = () => {
         });
 
         if (existingEmail) {
-          return done("User already exists", null);
+          const token = await generateToken(profile.email, existingEmail.id);
+          console.log("token: ", token);
+          return done(null, { ...existingEmail.toJSON(), token });
         }
 
         const threeDaysInSeconds = 3 * 24 * 60 * 60;
@@ -75,10 +78,10 @@ export const configureGoogleStrategy = () => {
           expiresAt: expiresAt,
         });
 
-        await savedUser.save();
-
         const token = await generateToken(profile.email, savedUser.id);
         console.log("token : ", token);
+
+        await savedUser.save();
 
         // return done(null, savedUser);
         return done(null, { ...savedUser.toJSON(), token });
