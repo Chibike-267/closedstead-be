@@ -278,7 +278,7 @@ export const deleteSingleUnit = async (req: Request, res: Response) => {
     });
 
     if (!unit) {
-      throw new Error("Unit not found");
+      return res.status(401).json({ error: "Unit not available" });
     }
 
     await unit.destroy();
