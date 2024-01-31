@@ -272,13 +272,10 @@ export const getUserUnitLocations = async (req: Request, res: Response) => {
 export const deleteSingleUnit = async (req: Request, res: Response) => {
   try {
     const unitId = req.params.id;
-    console.log(unitId);
 
     const unit = await UnitsModel.findOne({
       where: { id: unitId },
     });
-
-    console.log(unit);
 
     if (!unit) {
       throw new Error("Unit not found");
