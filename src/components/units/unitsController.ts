@@ -265,3 +265,24 @@ export const getUserUnitLocations = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "something went wrong" });
   }
 };
+
+export const deleteSingleUnit = async (req: Request, res: Response) => {
+  try {
+    const unitId = req.params.id;
+
+    const unit = await UnitsModel.findOne({
+      where: { id: unitId },
+    });
+
+    if (!unit) {
+      return res.status(401).json({ error: "Unit not available" });
+    }
+
+    await unit.destroy();
+
+    return res.status(201).json({ message: "Unit deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting unit:", error);
+    return res.status(500).json({ message: "Error deleting unit" });
+  }
+};

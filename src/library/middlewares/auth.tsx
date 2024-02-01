@@ -34,12 +34,9 @@ const authenticateMiddleware = async (
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    // req.user = user.dataValues
-    req.user = user;
-
+    req.user = user.dataValues;
     next();
   } catch (error) {
-    console.log("this is where i am");
     console.error("Authentication error:", error);
     return res.status(500).json({ error });
   }
