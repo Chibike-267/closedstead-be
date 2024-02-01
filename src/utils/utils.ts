@@ -127,7 +127,7 @@ export const createReservationSchema = Joi.object().keys({
   customerPhone: Joi.string().required(),
   checkInDate: Joi.date().required(),
   checkOutDate: Joi.date().required(),
-  status: Joi.string().max(255).required(),
+  // status: Joi.string().max(255).required(),
   unitId: Joi.string().optional(), // Make unitId optional in the schema
 });
 
