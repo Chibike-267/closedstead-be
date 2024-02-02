@@ -280,7 +280,7 @@ export const cancell = async (req: UserRequest, res: Response) => {
       return res.status(404).json({ message: "Reservation not found" });
     }
 
-    if (reservation.status !== "cancelled") {
+    if (reservation.status !== "cancelled" && reservation.status !== "in-residence" ) {
       await ReservationsModel.update(
         { status: "cancelled" },
         { where: { id } }
@@ -294,7 +294,7 @@ export const cancell = async (req: UserRequest, res: Response) => {
       message: "Reservation successfully cancelled",
     });
   } else {
-    return res.status(400).json({ message: "Reservation has already been cancelled" });
+    return res.status(400).json({ message: "Reservation has already been cancelled or you need to be checked out to cancell" });
   }
 }catch (error: any) {
     console.error("Error Checking out Client:", error);
