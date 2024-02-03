@@ -324,7 +324,7 @@ export const cancell = async (req: UserRequest, res: Response) => {
       );
 
       return res.status(200).json({
-        updatedReservation,
+        updateReservation,
         message: "Reservation successfully cancelled",
       });
     } else {
