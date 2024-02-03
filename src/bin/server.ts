@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-
 dotenv.config();
 import { createServer } from "http";
 import app from "../app";
@@ -13,7 +12,7 @@ const server = createServer(app);
 
 //please for whatever reason don't just think of {force:true}
 
-db.sync({alter:true})
+db.sync({ alter : true })
   .then(() => console.log("database connected successfully"))
   .catch((err) => {
     console.error("Unable to connect to you to your database:", err);

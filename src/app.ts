@@ -9,6 +9,8 @@ import logger from "morgan";
 import passport from "passport";
 import { configureGoogleStrategy } from "./components/OAuth";
 import router from "./routes";
+import { UsersModel } from "./components/users/model";
+import { generateToken } from "./utils/utils";
 
 const app = express();
 
@@ -19,7 +21,13 @@ app.use(cookieParser());
 // secure apps. should be placed before any authentication middleware
 app.use(helmet());
 // enable cors
-app.use(cors());
+app.use(
+  cors(
+    // origin: "http://localhost:5173",
+    // methods: "GET,POST,PUT,DELETE",
+    // credentials: true,
+  )
+);
 
 const sessionSecret = process.env.SECRET || "defaultSecret";
 
@@ -57,20 +65,42 @@ app.get(
 );
 
 app.get(
-  "/google/callback",
+  "/google/callback", 
   passport.authenticate("google", {
+    successRedirect: "/auth/success",
     failureRedirect: "/auth/failure",
-  }),
-  (req: Request, res: Response) => {
-    res.status(200).json({ message: "succesfully logged in" });
-  }
+  })
 );
 
-app.get("/auth/failure", (req, res) => {
-  res.send("something went wrong...");
+app.get("/auth/success", async (req: Request, res: Response) => {
+  // console.log("This is the REQUEST... ");
+  // console.log("This is the REQUEST... ");
+  // console.log("This is the REQUEST... ", req);
+
+  if (req.user) {
+    const user = req.user as UsersModel;
+    const id = user.id;
+    const email = user.email;
+    const token = await generateToken(email, id);
+    // res.status(200).json({
+    //   error: false,
+    //   message: "Successfully Logged in",
+    //   user: req.user,
+    //   token,
+    // });
+
+    return res.redirect(`http://localhost:5173/?token=${token}`);
+
+    // return res.redirect("http://localhost:5173/login");
+  } else {
+    res.status(403).json({ error: true, message: "Not authorized" });
+  }
+});
+app.get("/auth/failure", async (req: Request, res: Response) => {
+  res.status(401).json({ error: true, message: "Login Failed..." });
 });
 
-app.get("/logout", (req, res) => {
+app.get("/logout", (req: Request, res: Response) => {
   req.session.destroy(() => {
     console.log("User Logged out");
     res.redirect("/login");

@@ -3,7 +3,6 @@ import db from "../../db";
 import { UsersModel } from "../users/model";
 import { UnitsModel } from "../units/model";
 
-
 class ReservationsModel extends Model {
   public id!: string;
   public customerName!: string;
@@ -64,7 +63,7 @@ ReservationsModel.init(
           msg: "Invalid status value",
         },
       },
-  },
+    },
 
     createdAt: {
       type: DataTypes.DATE,
@@ -84,7 +83,6 @@ ReservationsModel.init(
 );
 
 ReservationsModel.belongsTo(UsersModel, { foreignKey: "userId" });
-UnitsModel.hasMany(ReservationsModel, { foreignKey: 'unitId' });
-
+UnitsModel.hasMany(ReservationsModel, { foreignKey: "unitId" });
 
 export { db, ReservationsModel };
