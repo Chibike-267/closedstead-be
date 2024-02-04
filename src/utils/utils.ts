@@ -155,16 +155,18 @@ export const createReservationSchema = Joi.object().keys({
   customerEmail: Joi.string().trim().lowercase().email().required(),
   customerPhone: Joi.string().required(),
   checkInDate: Joi.date().required(),
+  // location: Joi.string().required(),
   checkOutDate: Joi.date().required(),
-  status: Joi.string().max(255).required(),
-  unitId: Joi.string().optional(), // Make unitId optional in the schema
+  // status: Joi.string().max(255).optional(),
+  unitId: Joi.string().required(), // Make unitId optional in the schema
 });
 
 export const updateReservationSchema = Joi.object().keys({
   customerName: Joi.string(),
+  // location: Joi.string().required(),
   customerEmail: Joi.string().trim().lowercase().email(),
   customerPhone: Joi.string(),
   checkInDate: Joi.date(),
   checkOutDate: Joi.date(),
-  status: Joi.string(),
+  // status: Joi.string(),
 });

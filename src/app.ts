@@ -22,12 +22,13 @@ app.use(cookieParser());
 app.use(helmet());
 // enable cors
 app.use(
-  cors()
-  //   {
-  //   origin: "http://localhost:5173",
-  //   // methods: "GET,POST,PUT,DELETE",
-  //   credentials: true,
-  // }
+
+  cors(
+    // origin: "http://localhost:5173",
+    // methods: "GET,POST,PUT,DELETE",
+    // credentials: true,
+  )
+
 );
 
 const sessionSecret = process.env.SECRET || "defaultSecret";
@@ -66,7 +67,7 @@ app.get(
 );
 
 app.get(
-  "/google/callback",
+  "/google/callback", 
   passport.authenticate("google", {
     successRedirect: "/auth/success",
     failureRedirect: "/auth/failure",

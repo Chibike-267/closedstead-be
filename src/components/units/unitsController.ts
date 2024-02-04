@@ -187,9 +187,7 @@ export const unitsBeloningToUser = async (req: UserRequest, res: Response) => {
 export const getSingleUnit = async (req: UserRequest, res: Response) => {
   try {
     const { id } = req.params;
-
     const userId = req.user?.id;
-
     const unit = await UnitsModel.findOne({ where: { id, userId } });
 
     if (!unit) {
@@ -265,5 +263,26 @@ export const getUserUnitLocations = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error fetching user unit locations", error);
     return res.status(500).json({ message: "something went wrong" });
+  }
+};
+
+export const deleteSingleUnit = async (req: Request, res: Response) => {
+  try {
+    const unitId = req.params.id;
+
+    const unit = await UnitsModel.findOne({
+      where: { id: unitId },
+    });
+
+    if (!unit) {
+      return res.status(401).json({ error: "Unit not available" });
+    }
+
+    await unit.destroy();
+
+    return res.status(201).json({ message: "Unit deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting unit:", error);
+    return res.status(500).json({ message: "Error deleting unit" });
   }
 };

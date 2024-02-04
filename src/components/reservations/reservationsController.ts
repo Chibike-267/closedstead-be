@@ -192,8 +192,6 @@ export const getSingleReservation = async (req: UserRequest, res: Response) => {
   }
 };
 
-
-
 export const checkIn = async (req: UserRequest, res: Response) => {
   try {
     const { id } = req.params;
@@ -209,7 +207,9 @@ export const checkIn = async (req: UserRequest, res: Response) => {
     }
 
     if (reservation.status !== "reserved") {
-      return res.status(400).json({ message: "Reservation is not in the 'reserved' state" });
+      return res
+        .status(400)
+        .json({ message: "Reservation is not in the 'reserved' state" });
     }
 
     await ReservationsModel.update(
@@ -225,15 +225,15 @@ export const checkIn = async (req: UserRequest, res: Response) => {
     });
   } catch (error: any) {
     console.error("Error Checking in Client:", error);
-    return res.status(500).json({ error: error.message || "Something went wrong" });
+    return res
+      .status(500)
+      .json({ error: error.message || "Something went wrong" });
   }
 };
-
 
 export const checkOut = async (req: UserRequest, res: Response) => {
   try {
     const { id } = req.params;
-
     const userId = req.user?.id;
 
     const reservation = await ReservationsModel.findOne({
@@ -245,13 +245,12 @@ export const checkOut = async (req: UserRequest, res: Response) => {
     }
 
     if (reservation.status !== "in-residence") {
-      return res.status(400).json({ message: "Reservation is not in the 'In residence' state" });
+      return res
+        .status(400)
+        .json({ message: "Reservation is not in the 'In residence' state" });
     }
 
-    await ReservationsModel.update(
-      { status: "stayed" },
-      { where: { id } }
-    );
+    await ReservationsModel.update({ status: "stayed" }, { where: { id } });
 
     const updatedReservation = await ReservationsModel.findByPk(id);
 
@@ -261,10 +260,11 @@ export const checkOut = async (req: UserRequest, res: Response) => {
     });
   } catch (error: any) {
     console.error("Error Checking out Client:", error);
-    return res.status(500).json({ error: error.message || "Something went wrong" });
+    return res
+      .status(500)
+      .json({ error: error.message || "Something went wrong" });
   }
 };
-
 
 export const cancell = async (req: UserRequest, res: Response) => {
   try {
@@ -280,7 +280,7 @@ export const cancell = async (req: UserRequest, res: Response) => {
       return res.status(404).json({ message: "Reservation not found" });
     }
 
-    if (reservation.status !== "cancelled") {
+    if (reservation.status !== "cancelled" && reservation.status !== "in-residence" ) {
       await ReservationsModel.update(
         { status: "cancelled" },
         { where: { id } }
@@ -294,13 +294,57 @@ export const cancell = async (req: UserRequest, res: Response) => {
       message: "Reservation successfully cancelled",
     });
   } else {
-    return res.status(400).json({ message: "Reservation has already been cancelled" });
+    return res.status(400).json({ message: "Reservation has already been cancelled or you need to be checked out to cancell" });
   }
 }catch (error: any) {
     console.error("Error Checking out Client:", error);
-    return res.status(500).json({ error: error.message || "Something went wrong" });
+    return res
+      .status(500)
+      .json({ error: error.message || "Something went wrong" });
   }
 };
 
+// export const cancell = async (req: UserRequest, res: Response) => {
+//   try {
+//     const { id } = req.params;
+//     const userId = req.user?.id;
 
+//     const reservation = await ReservationsModel.findOne({
+//       where: { id, userId },
+//     });
 
+//     if (!reservation) {
+//       return res.status(404).json({ message: "Reservation not found" });
+//     }
+
+//     if (reservation.status === "cancelled") {
+//       return res
+//         .status(400)
+//         .json({ message: "Reservation has already been cancelled" });
+//     }
+
+// //Check if the current date is after the check-in date
+// const currentDate = new Date();
+// const checkInDate = new Date(reservation.checkInDate);
+
+// if (currentDate >= checkInDate) {
+//   return res
+//     .status(400)
+//     .json({ message: "Cannot cancel reservation after check-in" });
+// }
+
+// //Update the reservation status to "cancelled"
+//     await ReservationsModel.update({ status: "cancelled" }, { where: { id } });
+//     const updatedReservation = await ReservationsModel.findByPk(id);
+
+//     return res.status(200).json({
+//       updatedReservation,
+//       message: "Reservation successfully cancelled",
+//     });
+//   } catch (error: any) {
+//     console.error("Error Cancelling Reservation:", error);
+//     return res
+//       .status(500)
+//       .json({ error: error.message || "Something went wrong" });
+//   }
+// };
