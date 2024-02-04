@@ -22,11 +22,13 @@ app.use(cookieParser());
 app.use(helmet());
 // enable cors
 app.use(
+
   cors(
     // origin: "http://localhost:5173",
     // methods: "GET,POST,PUT,DELETE",
     // credentials: true,
   )
+
 );
 
 const sessionSecret = process.env.SECRET || "defaultSecret";
