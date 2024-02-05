@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import multer from "multer";
+import UserRequest from "../../types/userRequest";
 
 interface UploadResult {
   public_id: string;
@@ -14,7 +15,11 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: async (req: Request, res: Response, file: Express.Multer.File) => {
+  params: async (
+    req: UserRequest,
+    res: Response,
+    file: Express.Multer.File
+  ) => {
     return {
       folder: "Image_Uploads",
     };
