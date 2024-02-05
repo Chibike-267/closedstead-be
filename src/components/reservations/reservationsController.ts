@@ -9,6 +9,7 @@ import {
 import Jwt, { JwtPayload } from "jsonwebtoken";
 import { UnitsModel } from "../units/model"; // Import UnitsModel assuming it is correctly defined
 import UserRequest from "../../types/userRequest";
+import { Op } from "sequelize";
 
 export const createReservation = async (req: UserRequest, res: Response) => {
   try {
@@ -41,6 +42,42 @@ export const createReservation = async (req: UserRequest, res: Response) => {
 
     const userId = req.user?.id;
     console.log("this is the userId: ", userId);
+
+    // check if the unit is available for reservation and if it is not available, return an error message
+    const reservation = await ReservationsModel.findOne({
+      where: {
+        unitId,
+        [Op.or]: [
+          {
+            checkInDate: {
+              [Op.between]: [checkInDate, checkOutDate],
+            },
+          },
+          {
+            checkOutDate: {
+              [Op.between]: [checkInDate, checkOutDate],
+            },
+          },
+        ],
+      },
+    });
+
+    // units should not be be reserved if it's last reservation is not checked out or cancelled
+
+    if (unit?.status === "occupied") {
+      // Check if the unit is reserved for the period and not cancelled
+      return res
+        .status(400)
+        .json({ message: "Unit has been reserved for the period" });
+    }
+
+    // Reservation should not be successful if it has been previously reserved for the same period and clause to check if the reservation is not cancelled.
+
+    if (reservation && reservation.status !== "cancelled") {
+      return res
+        .status(400)
+        .json({ message: "Unit has been reserved for the period" });
+    }
 
     const newReservation = await ReservationsModel.create({
       id: uuidv4(),
