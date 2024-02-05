@@ -28,7 +28,7 @@ export const createUnits = async (req: UserRequest, res: Response) => {
     // console.log(req.files);
     // return res.send(req.files);
     const validate = createUnitsSchema.validate(req.body, option);
-
+    console.log(req);
     if (validate.error) {
       return res.status(400).json({ Error: validate.error.details[0].message });
     }
@@ -36,6 +36,7 @@ export const createUnits = async (req: UserRequest, res: Response) => {
     const id = uuidv4();
 
     const userId = req.user?.id;
+    console.log(userId);
 
     let links = [];
     if (Array.isArray(req.files) && req.files.length > 0) {
