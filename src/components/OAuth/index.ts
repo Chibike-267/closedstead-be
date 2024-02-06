@@ -48,7 +48,7 @@ export const configureGoogleStrategy = () => {
 
         if (user) {
           // return done(null, profile);
-          console.log("token : ", userToken);
+          // console.log("token : ", userToken);
           return done(null, { ...user.toJSON(), userToken });
         }
 
@@ -59,7 +59,7 @@ export const configureGoogleStrategy = () => {
 
         if (existingEmail) {
           const token = await generateToken(profile.email, existingEmail.id);
-          console.log("token: ", token);
+          // console.log("token: ", token);
           return done(null, { ...existingEmail.toJSON(), token });
         }
 
@@ -79,7 +79,7 @@ export const configureGoogleStrategy = () => {
         });
 
         const token = await generateToken(profile.email, savedUser.id);
-        console.log("token : ", token);
+        // console.log("token : ", token);
 
         await savedUser.save();
 
