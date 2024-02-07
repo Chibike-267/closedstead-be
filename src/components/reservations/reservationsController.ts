@@ -305,12 +305,6 @@ export const checkOut = async (req: UserRequest, res: Response) => {
       });
     }
 
-    //    if (checkoutDate.getTime() > today.getTime()) {
-    //      return res.status(400).json({
-    //        message: "Cannot check out before due date, kindly edit reservation",
-    //      });
-    //    }
-
     await ReservationsModel.update({ status: "stayed" }, { where: { id } });
 
     const updatedReservation = await ReservationsModel.findByPk(id);
@@ -370,47 +364,3 @@ export const cancell = async (req: UserRequest, res: Response) => {
   }
 };
 
-// export const cancell = async (req: UserRequest, res: Response) => {
-//   try {
-//     const { id } = req.params;
-//     const userId = req.user?.id;
-
-//     const reservation = await ReservationsModel.findOne({
-//       where: { id, userId },
-//     });
-
-//     if (!reservation) {
-//       return res.status(404).json({ message: "Reservation not found" });
-//     }
-
-//     if (reservation.status === "cancelled") {
-//       return res
-//         .status(400)
-//         .json({ message: "Reservation has already been cancelled" });
-//     }
-
-// //Check if the current date is after the check-in date
-// const currentDate = new Date();
-// const checkInDate = new Date(reservation.checkInDate);
-
-// if (currentDate >= checkInDate) {
-//   return res
-//     .status(400)
-//     .json({ message: "Cannot cancel reservation after check-in" });
-// }
-
-// //Update the reservation status to "cancelled"
-//     await ReservationsModel.update({ status: "cancelled" }, { where: { id } });
-//     const updatedReservation = await ReservationsModel.findByPk(id);
-
-//     return res.status(200).json({
-//       updatedReservation,
-//       message: "Reservation successfully cancelled",
-//     });
-//   } catch (error: any) {
-//     console.error("Error Cancelling Reservation:", error);
-//     return res
-//       .status(500)
-//       .json({ error: error.message || "Something went wrong" });
-//   }
-// };
