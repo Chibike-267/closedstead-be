@@ -7,7 +7,7 @@ import { ReservationsModel } from "../reservations/model";
 import { UsersModel } from "../users/model";
 
 // Method to create notifications for reservations starting within the next 24 hours
-const checkinNotifications = async () => {
+export const checkinNotifications = async () => {
 	try {
 		// Calculate the date and time for reservations starting within the next 24 hours
 		const checkInDate = moment().add(24, "hours").toDate();
@@ -19,40 +19,27 @@ const checkinNotifications = async () => {
 					[Op.between]: [moment().toDate(), checkInDate],
 				},
 			},
-			include: [
-				{
-					model: UsersModel,
-					attributes: ["name", "email", "phone"],
-				},
-				{
-					model: UnitsModel,
-					attributes: ["id"],
-				},
-			],
 		});
 
 		for (const reservation of upcomingReservations) {
+			const title = `Reservation starting soon for ${reservation.customerName}`;
+			const body = `Reservation for ${reservation.customerName} is starting soon. Please make sure to check them in on time.`;
 			await NotificationsModel.create({
-				customerName: reservation.customerName,
-				customerEmail: reservation.customerEmail,
-				customerPhone: reservation.customerPhone,
-				checkInDate: reservation.checkInDate,
-				checkOutDate: reservation.checkOutDate,
+				title: title,
+				body: body,
 				userId: reservation.userId,
 				unitId: reservation.unitId,
 				reservationId: reservation.id,
 				notificationStatus: "unseen",
 			});
 		}
-
-		console.log("Notifications for starting reservations created successfully.");
 	} catch (error) {
 		console.error("Error creating notifications for starting reservations:", error);
 	}
 };
 
 // Method to create notifications for reservations ending within the next 24 hours
-const checkoutNotifications = async () => {
+export const checkoutNotifications = async () => {
 	try {
 		// Calculate the date and time for reservations ending within the next 24 hours
 		const checkOutDate = moment().add(24, "hours").toDate();
@@ -64,26 +51,15 @@ const checkoutNotifications = async () => {
 					[Op.between]: [moment().toDate(), checkOutDate],
 				},
 			},
-			include: [
-				{
-					model: UsersModel,
-					attributes: ["name", "email", "phone"],
-				},
-				{
-					model: UnitsModel,
-					attributes: ["id"],
-				},
-			],
 		});
 
 		// Create notifications for each reservation
 		for (const reservation of endingReservations) {
+			const title = `Reservation ending soon for ${reservation.customerName}`;
+			const body = `Reservation for ${reservation.customerName} is ending soon. Please make sure to check them out on time.`;
 			await NotificationsModel.create({
-				customerName: reservation.customerName,
-				customerEmail: reservation.customerEmail,
-				customerPhone: reservation.customerPhone,
-				checkInDate: reservation.checkInDate,
-				checkOutDate: reservation.checkOutDate,
+				title: title,
+				body: body,
 				userId: reservation.userId,
 				unitId: reservation.unitId,
 				reservationId: reservation.id,
@@ -96,7 +72,3 @@ const checkoutNotifications = async () => {
 		console.error("Error creating notifications for ending reservations:", error);
 	}
 };
-
-// Schedule the cron jobs
-cron.schedule("0 6 * * *", checkinNotifications);
-cron.schedule("0 12 * * *", checkoutNotifications);

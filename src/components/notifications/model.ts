@@ -6,11 +6,9 @@ import { ReservationsModel } from "../reservations/model";
 
 class NotificationsModel extends Model {
 	public id!: string;
-	public customerName!: string;
-	public customerEmail!: string;
-	public customerPhone!: string;
-	public checkInDate!: Date;
-	public checkOutDate!: Date;
+
+	public title!: string;
+	public body!: string;
 	public userId!: string;
 	public unitId!: string | null;
 	public reservationId!: string | null;
@@ -27,26 +25,15 @@ NotificationsModel.init(
 			defaultValue: DataTypes.UUIDV4,
 			allowNull: false,
 		},
-		customerName: {
+		title: {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
-		customerEmail: {
+		body: {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
-		customerPhone: {
-			type: DataTypes.STRING,
-			allowNull: false,
-		},
-		checkInDate: {
-			type: DataTypes.DATE,
-			allowNull: false,
-		},
-		checkOutDate: {
-			type: DataTypes.DATE,
-			allowNull: false,
-		},
+
 		userId: {
 			type: DataTypes.UUID,
 			allowNull: false,
