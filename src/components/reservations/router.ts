@@ -1,5 +1,4 @@
 import express, { Request, Response } from "express";
-import authenticateMiddleware from "../../library/middlewares/auth";
 import {
   createReservation,
   updateReservation,
@@ -10,6 +9,7 @@ import {
   checkOut,
   cancell,
 } from "./reservationsController";
+import authenticateMiddleware from "../../library/middlewares/auth";
 
 const router = express.Router();
 

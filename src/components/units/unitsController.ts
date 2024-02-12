@@ -1,4 +1,4 @@
-import { UnitsModel, db } from "./model";
+import { UnitsModel } from "./model";
 import { v4 as uuidv4 } from "uuid";
 import { Request, Response } from "express";
 import {
@@ -6,11 +6,9 @@ import {
   option,
   updateUnitsSchema,
 } from "../../utils/utils";
-import Jwt, { JwtPayload } from "jsonwebtoken";
 import { Op } from "sequelize";
 import UserRequest from "../../types/userRequest";
 import { Sequelize } from "sequelize";
-import { type } from "os";
 
 export const createUnits = async (req: UserRequest, res: Response) => {
   try {

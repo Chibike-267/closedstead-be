@@ -1,13 +1,12 @@
 import { ReservationsModel } from "./model";
 import { v4 as uuidv4 } from "uuid";
-import { Request, Response } from "express";
+import {  Response } from "express";
 import {
   createReservationSchema,
   updateReservationSchema,
   option,
 } from "../../utils/utils";
-import Jwt, { JwtPayload } from "jsonwebtoken";
-import { UnitsModel } from "../units/model"; // Import UnitsModel assuming it is correctly defined
+import { UnitsModel } from "../units/model"; 
 import UserRequest from "../../types/userRequest";
 import { Op } from "sequelize";
 
