@@ -20,7 +20,7 @@ import sendResetOTP from "../../library/helpers/requestResetOTP";
 export const registerUser = async (req: Request, res: Response) => {
   try {
     const { email, firstName, surname, password, phone } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
 
     const validate = registerUserSchema.validate(req.body, option);
 
@@ -77,6 +77,10 @@ export const login = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "invalid credentials" });
     }
 
+    const user = exists.dataValues;
+    const { firstName } = user;
+    // console.log("This is the USER DETAILS ..... ", user);
+
     const validPassword = await bcryptDecode(password, exists.password);
     if (!validPassword) {
       return res.status(400).json({ message: "invalid credentials" });
@@ -84,9 +88,9 @@ export const login = async (req: Request, res: Response) => {
 
     const token = await generateToken(email, exists.dataValues.id);
 
-    console.log("this is the token: ", token);
-
-    return res.status(200).json({ token, message: "login successful" });
+    return res
+      .status(200)
+      .json({ token, message: "login successful", firstName });
   } catch (error) {
     console.error("Error during login:", error);
     return res.status(500).json({ message: "something went wrong" });
