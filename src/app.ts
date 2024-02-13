@@ -121,7 +121,8 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 app.use((req, res, next) => {
 	res.status(404).send("Not Found");
 });
-
+checkinNotifications();
+checkoutNotifications();
 // Schedule the cron jobs
 cron.schedule("0 1 * * *", () => {
 	checkinNotifications();

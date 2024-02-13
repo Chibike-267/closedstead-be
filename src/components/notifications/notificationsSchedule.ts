@@ -22,8 +22,8 @@ export const checkinNotifications = async () => {
 		});
 
 		for (const reservation of upcomingReservations) {
-			const title = `Reservation starting soon for ${reservation.customerName}`;
-			const body = `Reservation for ${reservation.customerName} is starting soon. Please make sure to check them in on time.`;
+			const title = `CheckIn Reminder for ${reservation.customerName}`;
+			const body = `Reservation for ${reservation.customerName} is starting on ${reservation.checkOutDate}. Please make sure to check them in on time.`;
 			await NotificationsModel.create({
 				title: title,
 				body: body,
@@ -55,8 +55,8 @@ export const checkoutNotifications = async () => {
 
 		// Create notifications for each reservation
 		for (const reservation of endingReservations) {
-			const title = `Reservation ending soon for ${reservation.customerName}`;
-			const body = `Reservation for ${reservation.customerName} is ending soon. Please make sure to check them out on time.`;
+			const title = `Checkout Reminder for ${reservation.customerName}`;
+			const body = `Reservation for ${reservation.customerName} is ending on ${reservation.checkOutDate}. Please make sure to check them out on time.`;
 			await NotificationsModel.create({
 				title: title,
 				body: body,
