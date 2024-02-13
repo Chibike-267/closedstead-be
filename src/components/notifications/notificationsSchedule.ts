@@ -23,7 +23,9 @@ export const checkinNotifications = async () => {
 
 		for (const reservation of upcomingReservations) {
 			const title = `CheckIn Reminder for ${reservation.customerName}`;
-			const body = `Reservation for ${reservation.customerName} is starting on ${reservation.checkOutDate}. Please make sure to check them in on time.`;
+			const body = `Reservation for ${
+				reservation.customerName
+			} is starting on ${reservation.checkOutDate.toLocaleDateString()}. Please make sure to check them in on time.`;
 			await NotificationsModel.create({
 				title: title,
 				body: body,
@@ -56,7 +58,9 @@ export const checkoutNotifications = async () => {
 		// Create notifications for each reservation
 		for (const reservation of endingReservations) {
 			const title = `Checkout Reminder for ${reservation.customerName}`;
-			const body = `Reservation for ${reservation.customerName} is ending on ${reservation.checkOutDate}. Please make sure to check them out on time.`;
+			const body = `Reservation for ${
+				reservation.customerName
+			} is ending on ${reservation.checkOutDate.toLocaleDateString()}. Please make sure to check them out on time.`;
 			await NotificationsModel.create({
 				title: title,
 				body: body,
