@@ -1,12 +1,13 @@
 import { ReservationsModel } from "./model";
 import { v4 as uuidv4 } from "uuid";
-import {  Response } from "express";
+import { Request, Response } from "express";
 import {
   createReservationSchema,
   updateReservationSchema,
   option,
 } from "../../utils/utils";
-import { UnitsModel } from "../units/model"; 
+import Jwt, { JwtPayload } from "jsonwebtoken";
+import { UnitsModel } from "../units/model"; // Import UnitsModel assuming it is correctly defined
 import UserRequest from "../../types/userRequest";
 import { Op } from "sequelize";
 
@@ -181,8 +182,6 @@ export const reservationBelongingToUnit = async (
   try {
     const { unitId } = req.params; // Assuming the unitId is in the request parameters
 
-    // If unitId is not in req.params, you can try to get it from req.body
-    // const { unitId } = req.body;
 
     console.log(unitId);
 
@@ -303,6 +302,7 @@ export const checkOut = async (req: UserRequest, res: Response) => {
         message: "Cannot checkout before due date, kindly edit reservation",
       });
     }
+
 
     await ReservationsModel.update({ status: "stayed" }, { where: { id } });
 
