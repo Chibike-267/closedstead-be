@@ -26,9 +26,11 @@ app.use(helmet());
 // enable cors
 app.use(
 	cors()
-	// origin: "http://localhost:5173",
-	// methods: "GET,POST,PUT,DELETE",
-	// credentials: true,
+	//   {
+	//   origin: "http://localhost:5173",
+	//   methods: "GET,POST,PUT,DELETE",
+	//   credentials: true,
+	// }
 );
 
 const sessionSecret = process.env.SECRET || "defaultSecret";
@@ -69,31 +71,27 @@ app.get(
 app.get(
 	"/google/callback",
 	passport.authenticate("google", {
-		successRedirect: "/auth/success",
-		failureRedirect: "/auth/failure",
+		// successRedirect: "/auth/success",
+		successRedirect: "http://localhost:5173/",
+		// failureRedirect: "/auth/failure",
+		failureRedirect: "http://localhost:5173/",
 	})
 );
 
 app.get("/auth/success", async (req: Request, res: Response) => {
-	// console.log("This is the REQUEST... ");
-	// console.log("This is the REQUEST... ");
-	// console.log("This is the REQUEST... ", req);
-
 	if (req.user) {
 		const user = req.user as UsersModel;
 		const id = user.id;
 		const email = user.email;
 		const token = await generateToken(email, id);
-		// res.status(200).json({
-		//   error: false,
-		//   message: "Successfully Logged in",
-		//   user: req.user,
-		//   token,
-		// });
+		res.status(200).json({
+			error: false,
+			message: "Successfully Logged in",
+			user: req.user,
+			token,
+		});
 
-		return res.redirect(`http://localhost:5173/?token=${token}`);
-
-		// return res.redirect("http://localhost:5173/login");
+		// return res.redirect(`http://localhost:5173/?token=${token}`);
 	} else {
 		res.status(403).json({ error: true, message: "Not authorized" });
 	}
@@ -104,7 +102,7 @@ app.get("/auth/failure", async (req: Request, res: Response) => {
 
 app.get("/logout", (req: Request, res: Response) => {
 	req.session.destroy(() => {
-		console.log("User Logged out");
+		// console.log("User Logged out");
 		res.redirect("/login");
 	});
 });
