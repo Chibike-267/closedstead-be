@@ -127,5 +127,7 @@ cron.schedule("0 1 * * *", () => {
 	checkinNotifications();
 	checkoutNotifications();
 });
+// zcheckinNotifications();
+// checkoutNotifications()
 
 export default app;
