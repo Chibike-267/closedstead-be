@@ -1,10 +1,8 @@
 {
-  "name": "Closed-stead-backend-pod-B-sq17",
+  "name": "closedstead",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/decadevs/Closed-stead-backend-pod-B-sq17.git",
-  "author": "harney.hart@decagon.dev",
-  "license": "MIT",
+  "author": "Chibike",
   "scripts": {
     "dev": "nodemon src/bin/server.ts",
     "start": "node dist/bin/server.js",
